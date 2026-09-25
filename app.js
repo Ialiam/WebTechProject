@@ -4,7 +4,11 @@
   const CONFIG = window.TRIPFUEL_CONFIG || {};
   const FE_API = "https://www.fueleconomy.gov/ws/rest";
   const GEOCODE_API = "https://photon.komoot.io/api/";
-  const ROUTE_API = "https://router.project-osrm.org/route/v1/driving/";
+  const ROUTE_API = "https://valhalla1.openstreetmap.de/route";
+  const BACKUP_ROUTE_API = "https://router.project-osrm.org/route/v1/driving/";
+  // OSRM's drive times ran 15-25% longer than Google Maps on highway trips we
+  // measured (e.g. Sudbury → Toronto 5 h 06 vs about 3 h 45), so scale them.
+  const BACKUP_ROUTE_TIME_FACTOR = 0.8;
   const PLACES_API = "https://places.googleapis.com/v1/places:searchNearby";
   const KWH_PER_GALLON_EQUIV = 33.7;
   const METERS_PER_MILE = 1609.344;
@@ -816,18 +820,67 @@
 
   // ---------- routing ----------
 
+  // Decodes an encoded polyline (Valhalla uses 6 decimal places) into [lat, lon] pairs.
+  function decodePolyline(str, precision = 6) {
+    const factor = 10 ** precision;
+    const coords = [];
+    let index = 0, lat = 0, lon = 0;
+    while (index < str.length) {
+      for (const axis of [0, 1]) {
+        let shift = 0, result = 0, byte;
+        do {
+          byte = str.charCodeAt(index++) - 63;
+          result |= (byte & 0x1f) << shift;
+          shift += 5;
+        } while (byte >= 0x20);
+        const delta = result & 1 ? ~(result >> 1) : result >> 1;
+        if (axis === 0) lat += delta; else lon += delta;
+      }
+      coords.push([lat / factor, lon / factor]);
+    }
+    return coords;
+  }
+
+  // Driving route from Valhalla, whose drive times are close to Google Maps.
+  async function valhallaRoute(a, b) {
+    const query = {
+      locations: [{ lat: a.lat, lon: a.lon }, { lat: b.lat, lon: b.lon }],
+      costing: "auto",
+      units: "kilometers",
+      directions_type: "none",
+    };
+    const data = await fetchJSON(`${ROUTE_API}?json=${encodeURIComponent(JSON.stringify(query))}`, { timeout: 15000 });
+    const trip = data.trip;
+    if (!trip || trip.status !== 0) throw new Error((trip && trip.status_message) || data.error || "No route");
+    return {
+      miles: trip.summary.length / KM_PER_MILE,
+      seconds: trip.summary.time,
+      coords: trip.legs.flatMap((leg) => decodePolyline(leg.shape)),
+      estimated: false,
+    };
+  }
+
+  async function osrmRoute(a, b) {
+    const url = `${BACKUP_ROUTE_API}${a.lon},${a.lat};${b.lon},${b.lat}?overview=full&geometries=geojson`;
+    const data = await fetchJSON(url, { timeout: 15000 });
+    const route = data.routes && data.routes[0];
+    if (data.code !== "Ok" || !route) throw new Error(data.message || data.code || "No route");
+    return {
+      miles: route.distance / METERS_PER_MILE,
+      seconds: route.duration * BACKUP_ROUTE_TIME_FACTOR,
+      coords: route.geometry.coordinates.map(([lon, lat]) => [lat, lon]),
+      estimated: false,
+    };
+  }
+
   async function getRoute(a, b) {
     try {
-      const url = `${ROUTE_API}${a.lon},${a.lat};${b.lon},${b.lat}?overview=full&geometries=geojson`;
-      const data = await fetchJSON(url, { timeout: 15000 });
-      const route = data.routes && data.routes[0];
-      if (data.code !== "Ok" || !route) throw new Error(data.message || data.code || "No route");
-      return {
-        miles: route.distance / METERS_PER_MILE,
-        seconds: route.duration,
-        coords: route.geometry.coordinates.map(([lon, lat]) => [lat, lon]),
-        estimated: false,
-      };
+      return await valhallaRoute(a, b);
+    } catch (err) {
+      console.warn("Valhalla routing failed, trying OSRM:", err);
+    }
+    try {
+      return await osrmRoute(a, b);
     } catch (err) {
       console.warn("Routing failed, estimating distance:", err);
       // Road distance is typically ~20-30% longer than straight-line distance.

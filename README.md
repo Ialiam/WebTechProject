@@ -24,7 +24,7 @@ The site is plain HTML, CSS and JavaScript. It needs no build step, server or AP
 | Today's pump prices at stations near the starting point | [Google Places API (New)](https://developers.google.com/maps/documentation/places/web-service/nearby-search), optional, needs your API key |
 | US national average fuel prices | FuelEconomy.gov `/ws/rest/fuelprices` (EIA data, updated weekly) |
 | Location autocomplete | [Photon](https://photon.komoot.io) (OpenStreetMap) |
-| Driving distance and time | [OSRM](https://project-osrm.org) demo server |
+| Driving distance and time | [Valhalla](https://github.com/valhalla/valhalla) on the FOSSGIS server (the one openstreetmap.org uses); backup: [OSRM](https://project-osrm.org) demo server |
 | Map | [Leaflet](https://leafletjs.com) + OpenStreetMap tiles |
 
 If one of these services is down, the site keeps working:
@@ -78,4 +78,4 @@ python3 -m http.server 8000
 
 ### Before you get heavy traffic
 
-The OSRM demo server and the public Photon instance are free, shared services with fair-use limits. Once the site gets thousands of daily visitors, switch the URLs at the top of `app.js` (`GEOCODE_API`, `ROUTE_API`) to a paid or self-hosted provider, such as OpenRouteService, Mapbox or Google Maps.
+The Valhalla (FOSSGIS) and OSRM demo servers and the public Photon instance are free, shared services with fair-use limits. Once the site gets thousands of daily visitors, switch the URLs at the top of `app.js` (`GEOCODE_API`, `ROUTE_API`, `BACKUP_ROUTE_API`) to a paid or self-hosted provider, such as Stadia Maps (hosted Valhalla), OpenRouteService, Mapbox or Google Maps.
