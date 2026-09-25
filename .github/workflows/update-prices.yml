@@ -8,9 +8,6 @@ on:
     - cron: "23 14 * * *"
     - cron: "23 22 * * *"
   workflow_dispatch:
-  push:
-    branches: [claude/fuel-cost-calculator-kub0sf]
-    paths: [scripts/update_prices.py, .github/workflows/update-prices.yml]
 
 permissions:
   contents: write

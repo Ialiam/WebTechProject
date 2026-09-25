@@ -55,6 +55,7 @@ window.FALLBACK_PRICES = {
   regular: 3.15, midgrade: 3.60, premium: 3.95, diesel: 3.70, e85: 2.80, electric: 0.17
 };
 // Canada: rough national averages, CAD per litre (electricity CAD per kWh).
+// Only used if data/prices.json can't be loaded.
 window.FALLBACK_PRICES_CA = {
-  regular: 1.55, midgrade: 1.72, premium: 1.85, diesel: 1.65, electric: 0.14
+  regular: 1.90, midgrade: 2.10, premium: 2.20, diesel: 2.60, electric: 0.14
 };

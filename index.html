@@ -94,6 +94,10 @@
 
         <fieldset>
           <legend><span class="step">3</span> Fuel price &amp; extras</legend>
+          <div class="units price-mode" role="radiogroup" aria-label="Fuel price">
+            <label><input type="radio" name="price-mode" value="auto" checked /> <span>Find today's price</span></label>
+            <label><input type="radio" name="price-mode" value="manual" /> <span>Type the pump price</span></label>
+          </div>
           <div class="grid-2">
             <div class="field">
               <label for="fuel-type">Fuel type</label>

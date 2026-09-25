@@ -20,6 +20,7 @@ The site is plain HTML, CSS and JavaScript. It needs no build step, server or AP
 | What | Service |
 |------|---------|
 | Car year/make/model and EPA MPG | [FuelEconomy.gov web services](https://www.fueleconomy.gov/feg/ws/) |
+| Daily average pump prices for 69 Canadian cities (Sudbury, Toronto, Vancouver…) | [Natural Resources Canada](https://www2.nrcan.gc.ca/eneene/sources/pripri/prices_bycity_e.cfm), collected into `data/prices.json` every day (see below) |
 | Today's pump prices at stations near the starting point | [Google Places API (New)](https://developers.google.com/maps/documentation/places/web-service/nearby-search), optional, needs your API key |
 | US national average fuel prices | FuelEconomy.gov `/ws/rest/fuelprices` (EIA data, updated weekly) |
 | Location autocomplete | [Photon](https://photon.komoot.io) (OpenStreetMap) |
@@ -28,10 +29,19 @@ The site is plain HTML, CSS and JavaScript. It needs no build step, server or AP
 
 If one of these services is down, the site keeps working:
 - If the vehicle lookup fails, it uses a built-in list of popular cars (`vehicles-fallback.js`), and the user can always type their MPG manually.
-- If there are no nearby station prices (no Google key, or no prices listed near that place), it uses the US national average or a rough Canadian average. In other countries it asks for the price. Users can always edit the price.
+- Price order: stations near the starting point (with a Google key), then the nearest Canadian city's daily average (within 100 km), then the national average. In other countries it asks for the price.
+- Visitors choose between **Find today's price** and **Type the pump price**. Once they type a price, it stays even if they change the city or fuel type.
 - If routing fails, it estimates the distance from the straight-line distance plus 25%.
 
-## Live fuel prices near the user
+## Daily Canadian city prices (free)
+
+`.github/workflows/update-prices.yml` runs `scripts/update_prices.py` twice a day on GitHub's servers. The script reads Natural Resources Canada's daily average prices (regular, midgrade, premium, diesel) for about 70 cities plus the national average, and saves them to `data/prices.json`. If anything looks wrong (too few cities, or impossible prices), it keeps the previous file.
+
+- It's free: no key, no card, and it only uses GitHub Actions minutes, which are free for public repos.
+- To run it right away, go to **Actions → Update fuel prices → Run workflow**.
+- GitHub pauses scheduled workflows in repos with no activity for 60 days. The daily price commits count as activity, but if it ever pauses, click **Enable workflow** on that page.
+
+## Live fuel prices near the user (optional, Google)
 
 With a Google Maps API key, the site looks up gas stations within 8 km of the starting point, takes their posted prices for the car's fuel type, and fills in the typical (median) price. It also lists nearby stations with the cheapest first. Google shows station prices for Canada, the US and many other countries.
 

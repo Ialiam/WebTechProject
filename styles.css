@@ -169,3 +169,5 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .prices .station-name small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; }
 .prices tr.cheapest td:last-child { color: var(--accent); }
 .price-hint-ok { color: var(--accent); }
+
+.price-mode { margin-bottom: 12px; }
