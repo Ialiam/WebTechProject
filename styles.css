@@ -153,3 +153,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 
 .site-footer { margin-top: 40px; padding: 24px 0; border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
 .site-footer p { margin: 4px 0; }
+
+.units { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.units-label { font-size: .9rem; font-weight: 600; margin-right: 4px; }
+.units label { margin: 0; font-weight: 500; cursor: pointer; }
+.units input { position: absolute; opacity: 0; pointer-events: none; }
+.units label span {
+  display: inline-block; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+  font-size: .88rem; background: var(--bg);
+}
+.units label input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.units input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.prices .station-name { font-weight: 600; }
+.prices .station-name small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; }
+.prices tr.cheapest td:last-child { color: var(--accent); }
+.price-hint-ok { color: var(--accent); }
