@@ -9,4 +9,7 @@ window.TRIPFUEL_CONFIG = {
 
   // How far from the starting point to look for gas stations, in metres.
   stationSearchRadius: 8000,
+
+  // Show the ad spaces. Keep false until Google AdSense approves the site.
+  showAds: false,
 };

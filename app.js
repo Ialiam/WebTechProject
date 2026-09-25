@@ -1129,6 +1129,8 @@
     setTimeout(() => { el.shareBtn.textContent = "Copy shareable link"; }, 2000);
   });
 
+  if (CONFIG.showAds) document.querySelectorAll(".ad-slot").forEach((slot) => { slot.hidden = false; });
+
   setupAutocomplete(el.from, "from");
   setupAutocomplete(el.to, "to");
   $("year-now").textContent = new Date().getFullYear();

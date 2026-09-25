@@ -72,7 +72,7 @@ python3 -m http.server 8000
 
 ## Making money from it
 
-- **Google AdSense**: the page has three placeholder ad slots (`<div class="ad-slot">`). Once AdSense approves your site, paste its script into `<head>` in `index.html` and swap each placeholder for an `<ins class="adsbygoogle">` unit. A privacy policy that mentions ad cookies is already included (`privacy.html`), which AdSense requires.
+- **Google AdSense**: the page has three ad spaces (`<div class="ad-slot">`), hidden for now. Once AdSense approves your site, paste its script into `<head>` in `index.html`, put an `<ins class="adsbygoogle">` unit inside each ad space, and set `showAds: true` in `config.js`. A privacy policy that mentions ad cookies is already included (`privacy.html`), which AdSense requires.
 - **Affiliate links**: you could add links under the results, such as gas rewards cards, roadside assistance, car rentals or hotels along the route.
 - **Traffic (SEO)**: the page already has a title, description and Open Graph tags. Each calculation also gets a shareable URL (for example `?from=Dallas&to=Houston&year=2020&make=Toyota&model=Camry`). You could publish pages for popular routes such as "Cost to drive from LA to Las Vegas" and link them to pre-filled calculations.
 
