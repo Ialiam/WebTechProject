@@ -1,0 +1,920 @@
+{
+ "updated": "2026-09-25",
+ "countries": {
+  "CA": {
+   "currency": "CAD",
+   "unit": "L",
+   "source": "Natural Resources Canada",
+   "sourceUrl": "https://www2.nrcan.gc.ca/eneene/sources/pripri/prices_bycity_e.cfm",
+   "national": {
+    "name": "Canada",
+    "date": "2026-09-25",
+    "prices": {
+     "regular": 1.925,
+     "midgrade": 2.127,
+     "premium": 2.212,
+     "diesel": 2.632
+    }
+   },
+   "cities": [
+    {
+     "name": "Abbotsford",
+     "region": "BC",
+     "lat": 49.0504,
+     "lon": -122.3045,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.904,
+      "midgrade": 2.091,
+      "premium": 2.17,
+      "diesel": 2.693
+     }
+    },
+    {
+     "name": "Barrie",
+     "region": "ON",
+     "lat": 44.3894,
+     "lon": -79.6903,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.89,
+      "midgrade": 2.093,
+      "premium": 2.197,
+      "diesel": 2.506
+     }
+    },
+    {
+     "name": "Bathurst",
+     "region": "NB",
+     "lat": 47.6186,
+     "lon": -65.6509,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.968,
+      "midgrade": 2.119,
+      "premium": 2.244,
+      "diesel": 2.726
+     }
+    },
+    {
+     "name": "Brandon",
+     "region": "MB",
+     "lat": 49.8485,
+     "lon": -99.9501,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.706,
+      "midgrade": 1.859,
+      "premium": 1.965,
+      "diesel": 2.579
+     }
+    },
+    {
+     "name": "Brantford",
+     "region": "ON",
+     "lat": 43.1394,
+     "lon": -80.2644,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.872,
+      "midgrade": 2.076,
+      "premium": 2.169,
+      "diesel": 2.475
+     }
+    },
+    {
+     "name": "Calgary",
+     "region": "AB",
+     "lat": 51.0447,
+     "lon": -114.0719,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.72,
+      "midgrade": 1.889,
+      "premium": 1.982,
+      "diesel": 2.509
+     }
+    },
+    {
+     "name": "Campbellton",
+     "region": "NB",
+     "lat": 48.0055,
+     "lon": -66.6727,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.989,
+      "midgrade": 2.163,
+      "premium": 2.339,
+      "diesel": 2.732
+     }
+    },
+    {
+     "name": "Charlottetown",
+     "region": "PE",
+     "lat": 46.2382,
+     "lon": -63.1311,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.149,
+      "midgrade": 2.205,
+      "premium": 2.255,
+      "diesel": 2.684
+     }
+    },
+    {
+     "name": "Chicoutimi",
+     "region": "QC",
+     "lat": 48.428,
+     "lon": -71.068,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.846,
+      "midgrade": 2.064,
+      "premium": 2.111,
+      "diesel": 2.923
+     }
+    },
+    {
+     "name": "Corner Brook",
+     "region": "NL",
+     "lat": 48.95,
+     "lon": -57.9522,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.252,
+      "midgrade": 2.282,
+      "premium": 2.312,
+      "diesel": 2.692
+     }
+    },
+    {
+     "name": "Drummondville",
+     "region": "QC",
+     "lat": 45.8838,
+     "lon": -72.4843,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.882,
+      "midgrade": 2.104,
+      "premium": 2.148,
+      "diesel": 2.914
+     }
+    },
+    {
+     "name": "Edmonton",
+     "region": "AB",
+     "lat": 53.5461,
+     "lon": -113.4938,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.67,
+      "midgrade": 1.862,
+      "premium": 1.943,
+      "diesel": 2.502
+     }
+    },
+    {
+     "name": "Edmundston",
+     "region": "NB",
+     "lat": 47.3737,
+     "lon": -68.3251,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.947,
+      "midgrade": 2.101,
+      "premium": 2.254,
+      "diesel": 2.732
+     }
+    },
+    {
+     "name": "Fort St. John",
+     "region": "BC",
+     "lat": 56.2524,
+     "lon": -120.8466,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.975,
+      "midgrade": 2.104,
+      "premium": 2.229,
+      "diesel": 2.711
+     }
+    },
+    {
+     "name": "Fredericton",
+     "region": "NB",
+     "lat": 45.9636,
+     "lon": -66.6431,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.965,
+      "midgrade": 2.121,
+      "premium": 2.28,
+      "diesel": 2.71
+     }
+    },
+    {
+     "name": "Gander",
+     "region": "NL",
+     "lat": 48.9569,
+     "lon": -54.6089,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.279,
+      "midgrade": 2.31,
+      "premium": 2.34,
+      "diesel": 2.684
+     }
+    },
+    {
+     "name": "Gaspé",
+     "region": "QC",
+     "lat": 48.8316,
+     "lon": -64.4869,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.999,
+      "midgrade": 2.201,
+      "premium": 2.243,
+      "diesel": 2.923
+     }
+    },
+    {
+     "name": "Gatineau",
+     "region": "QC",
+     "lat": 45.4765,
+     "lon": -75.7013,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.804,
+      "midgrade": 2.014,
+      "premium": 2.072,
+      "diesel": 2.889
+     }
+    },
+    {
+     "name": "Grande Prairie",
+     "region": "AB",
+     "lat": 55.1707,
+     "lon": -118.7947,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.777,
+      "midgrade": 1.952,
+      "premium": 2.041,
+      "diesel": 2.473
+     }
+    },
+    {
+     "name": "Guelph",
+     "region": "ON",
+     "lat": 43.5448,
+     "lon": -80.2482,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.891,
+      "midgrade": 2.108,
+      "premium": 2.193,
+      "diesel": 2.497
+     }
+    },
+    {
+     "name": "Halifax",
+     "region": "NS",
+     "lat": 44.6488,
+     "lon": -63.5752,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.991,
+      "midgrade": 2.092,
+      "premium": 2.167,
+      "diesel": 2.642
+     }
+    },
+    {
+     "name": "Hamilton",
+     "region": "ON",
+     "lat": 43.2557,
+     "lon": -79.8711,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.894,
+      "midgrade": 2.099,
+      "premium": 2.193,
+      "diesel": 2.534
+     }
+    },
+    {
+     "name": "Kamloops",
+     "region": "BC",
+     "lat": 50.6745,
+     "lon": -120.3273,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.929,
+      "midgrade": 2.103,
+      "premium": 2.192,
+      "diesel": 2.833
+     }
+    },
+    {
+     "name": "Kelowna",
+     "region": "BC",
+     "lat": 49.888,
+     "lon": -119.496,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.025,
+      "midgrade": 2.203,
+      "premium": 2.281,
+      "diesel": 2.81
+     }
+    },
+    {
+     "name": "Kentville",
+     "region": "NS",
+     "lat": 45.0771,
+     "lon": -64.4958,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.997,
+      "midgrade": 2.098,
+      "premium": 2.169,
+      "diesel": 2.624
+     }
+    },
+    {
+     "name": "Kingston",
+     "region": "ON",
+     "lat": 44.2312,
+     "lon": -76.486,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.736,
+      "midgrade": 1.946,
+      "premium": 2.045,
+      "diesel": 2.489
+     }
+    },
+    {
+     "name": "Kitchener",
+     "region": "ON",
+     "lat": 43.4516,
+     "lon": -80.4925,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.898,
+      "midgrade": 2.102,
+      "premium": 2.201,
+      "diesel": 2.492
+     }
+    },
+    {
+     "name": "Labrador City",
+     "region": "NL",
+     "lat": 52.9463,
+     "lon": -66.9114,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.314,
+      "midgrade": 2.344,
+      "premium": 2.374,
+      "diesel": 2.736
+     }
+    },
+    {
+     "name": "Lethbridge",
+     "region": "AB",
+     "lat": 49.6956,
+     "lon": -112.8451,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.805,
+      "midgrade": 1.957,
+      "premium": 2.047,
+      "diesel": 2.499
+     }
+    },
+    {
+     "name": "Lloydminster",
+     "region": "AB",
+     "lat": 53.2783,
+     "lon": -110.0053,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.736,
+      "midgrade": 1.942,
+      "premium": 2.012,
+      "diesel": 2.526
+     }
+    },
+    {
+     "name": "London",
+     "region": "ON",
+     "lat": 42.9849,
+     "lon": -81.2453,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.896,
+      "midgrade": 2.107,
+      "premium": 2.208,
+      "diesel": 2.506
+     }
+    },
+    {
+     "name": "Miramichi",
+     "region": "NB",
+     "lat": 47.0296,
+     "lon": -65.5019,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.976,
+      "midgrade": 2.116,
+      "premium": 2.258,
+      "diesel": 2.74
+     }
+    },
+    {
+     "name": "Moncton",
+     "region": "NB",
+     "lat": 46.0878,
+     "lon": -64.7782,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.968,
+      "midgrade": 2.115,
+      "premium": 2.259,
+      "diesel": 2.712
+     }
+    },
+    {
+     "name": "Montreal",
+     "region": "QC",
+     "lat": 45.5019,
+     "lon": -73.5674,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.986,
+      "midgrade": 2.206,
+      "premium": 2.245,
+      "diesel": 2.899
+     }
+    },
+    {
+     "name": "Moose Jaw",
+     "region": "SK",
+     "lat": 50.3934,
+     "lon": -105.5519,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.829,
+      "midgrade": 1.994,
+      "premium": 2.097,
+      "diesel": 2.516
+     }
+    },
+    {
+     "name": "New Glasgow",
+     "region": "NS",
+     "lat": 45.5869,
+     "lon": -62.6453,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.003,
+      "midgrade": 2.107,
+      "premium": 2.181,
+      "diesel": 2.66
+     }
+    },
+    {
+     "name": "North Bay",
+     "region": "ON",
+     "lat": 46.3091,
+     "lon": -79.4608,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.819,
+      "midgrade": 2.039,
+      "premium": 2.132,
+      "diesel": 2.576
+     }
+    },
+    {
+     "name": "Oshawa",
+     "region": "ON",
+     "lat": 43.8971,
+     "lon": -78.8658,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.895,
+      "midgrade": 2.103,
+      "premium": 2.202,
+      "diesel": 2.499
+     }
+    },
+    {
+     "name": "Ottawa",
+     "region": "ON",
+     "lat": 45.4215,
+     "lon": -75.6972,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.832,
+      "midgrade": 2.027,
+      "premium": 2.135,
+      "diesel": 2.575
+     }
+    },
+    {
+     "name": "Peterborough",
+     "region": "ON",
+     "lat": 44.3091,
+     "lon": -78.3197,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.786,
+      "midgrade": 1.991,
+      "premium": 2.08,
+      "diesel": 2.539
+     }
+    },
+    {
+     "name": "Prince Albert",
+     "region": "SK",
+     "lat": 53.2033,
+     "lon": -105.7531,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.772,
+      "midgrade": 1.917,
+      "premium": 2.002,
+      "diesel": 2.479
+     }
+    },
+    {
+     "name": "Prince George",
+     "region": "BC",
+     "lat": 53.9171,
+     "lon": -122.7497,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.971,
+      "midgrade": 2.177,
+      "premium": 2.252,
+      "diesel": 2.779
+     }
+    },
+    {
+     "name": "Quebec",
+     "region": "QC",
+     "lat": 46.8139,
+     "lon": -71.208,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.931,
+      "midgrade": 2.148,
+      "premium": 2.194,
+      "diesel": 2.919
+     }
+    },
+    {
+     "name": "Red Deer",
+     "region": "AB",
+     "lat": 52.2681,
+     "lon": -113.8112,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.783,
+      "midgrade": 1.932,
+      "premium": 2.038,
+      "diesel": 2.536
+     }
+    },
+    {
+     "name": "Regina",
+     "region": "SK",
+     "lat": 50.4452,
+     "lon": -104.6189,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.873,
+      "midgrade": 2.037,
+      "premium": 2.133,
+      "diesel": 2.593
+     }
+    },
+    {
+     "name": "Rimouski",
+     "region": "QC",
+     "lat": 48.449,
+     "lon": -68.523,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.954,
+      "midgrade": 2.176,
+      "premium": 2.216,
+      "diesel": 2.923
+     }
+    },
+    {
+     "name": "Saint John",
+     "region": "NB",
+     "lat": 45.2733,
+     "lon": -66.0633,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.96,
+      "midgrade": 2.094,
+      "premium": 2.229,
+      "diesel": 2.702
+     }
+    },
+    {
+     "name": "Sarnia",
+     "region": "ON",
+     "lat": 42.9745,
+     "lon": -82.4066,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.728,
+      "midgrade": 1.941,
+      "premium": 2.033,
+      "diesel": 2.589
+     }
+    },
+    {
+     "name": "Saskatoon",
+     "region": "SK",
+     "lat": 52.1332,
+     "lon": -106.67,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.878,
+      "midgrade": 2.041,
+      "premium": 2.141,
+      "diesel": 2.459
+     }
+    },
+    {
+     "name": "Sault Ste Marie",
+     "region": "ON",
+     "lat": 46.5219,
+     "lon": -84.3461,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.782,
+      "midgrade": 1.986,
+      "premium": 2.092,
+      "diesel": 2.589
+     }
+    },
+    {
+     "name": "Sherbrooke",
+     "region": "QC",
+     "lat": 45.4042,
+     "lon": -71.8929,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.929,
+      "midgrade": 2.147,
+      "premium": 2.193,
+      "diesel": 2.921
+     }
+    },
+    {
+     "name": "St. Catharines",
+     "region": "ON",
+     "lat": 43.1594,
+     "lon": -79.2469,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.838,
+      "midgrade": 2.043,
+      "premium": 2.137,
+      "diesel": 2.549
+     }
+    },
+    {
+     "name": "St. John's",
+     "region": "NL",
+     "lat": 47.5615,
+     "lon": -52.7126,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.242,
+      "midgrade": 2.272,
+      "premium": 2.302,
+      "diesel": 2.682
+     }
+    },
+    {
+     "name": "Sudbury",
+     "region": "ON",
+     "lat": 46.4917,
+     "lon": -80.993,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.741,
+      "midgrade": 1.952,
+      "premium": 2.05,
+      "diesel": 2.564
+     }
+    },
+    {
+     "name": "Sussex",
+     "region": "NB",
+     "lat": 45.7226,
+     "lon": -65.5105,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.964,
+      "midgrade": 2.131,
+      "premium": 2.299,
+      "diesel": 2.708
+     }
+    },
+    {
+     "name": "Sydney",
+     "region": "NS",
+     "lat": 46.1368,
+     "lon": -60.1942,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.011,
+      "midgrade": 2.116,
+      "premium": 2.193,
+      "diesel": 2.665
+     }
+    },
+    {
+     "name": "Thunder Bay",
+     "region": "ON",
+     "lat": 48.3809,
+     "lon": -89.2477,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.867,
+      "midgrade": 2.076,
+      "premium": 2.173,
+      "diesel": 2.654
+     }
+    },
+    {
+     "name": "Timmins",
+     "region": "ON",
+     "lat": 48.4758,
+     "lon": -81.3305,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.899,
+      "midgrade": 2.094,
+      "premium": 2.172,
+      "diesel": 2.666
+     }
+    },
+    {
+     "name": "Toronto",
+     "region": "ON",
+     "lat": 43.6532,
+     "lon": -79.3832,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.898,
+      "midgrade": 2.108,
+      "premium": 2.21,
+      "diesel": 2.491
+     }
+    },
+    {
+     "name": "Trois-Rivières",
+     "region": "QC",
+     "lat": 46.3432,
+     "lon": -72.5421,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.937,
+      "midgrade": 2.157,
+      "premium": 2.203,
+      "diesel": 2.959
+     }
+    },
+    {
+     "name": "Truro",
+     "region": "NS",
+     "lat": 45.365,
+     "lon": -63.2861,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.003,
+      "midgrade": 2.106,
+      "premium": 2.184,
+      "diesel": 2.639
+     }
+    },
+    {
+     "name": "Val d'Or",
+     "region": "QC",
+     "lat": 48.0975,
+     "lon": -77.7828,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.995,
+      "midgrade": 2.208,
+      "premium": 2.25,
+      "diesel": 2.979
+     }
+    },
+    {
+     "name": "Vancouver",
+     "region": "BC",
+     "lat": 49.2827,
+     "lon": -123.1207,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.147,
+      "midgrade": 2.326,
+      "premium": 2.41,
+      "diesel": 2.795
+     }
+    },
+    {
+     "name": "Victoria",
+     "region": "BC",
+     "lat": 48.4284,
+     "lon": -123.3656,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.049,
+      "midgrade": 2.238,
+      "premium": 2.318,
+      "diesel": 2.721
+     }
+    },
+    {
+     "name": "Whitehorse",
+     "region": "YT",
+     "lat": 60.7212,
+     "lon": -135.0568,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.109,
+      "midgrade": 2.174,
+      "premium": 2.244,
+      "diesel": 2.699
+     }
+    },
+    {
+     "name": "Windsor",
+     "region": "ON",
+     "lat": 42.3149,
+     "lon": -83.0364,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.882,
+      "midgrade": 2.086,
+      "premium": 2.188,
+      "diesel": 2.457
+     }
+    },
+    {
+     "name": "Winnipeg",
+     "region": "MB",
+     "lat": 49.8951,
+     "lon": -97.1384,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.785,
+      "midgrade": 1.937,
+      "premium": 2.054,
+      "diesel": 2.635
+     }
+    },
+    {
+     "name": "Yarmouth",
+     "region": "NS",
+     "lat": 43.8375,
+     "lon": -66.1174,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 2.001,
+      "midgrade": 2.102,
+      "premium": 2.173,
+      "diesel": 2.629
+     }
+    },
+    {
+     "name": "Yellowknife",
+     "region": "NT",
+     "lat": 62.454,
+     "lon": -114.3718,
+     "date": "2026-09-25",
+     "prices": {
+      "regular": 1.849,
+      "midgrade": 1.929,
+      "premium": 2.099,
+      "diesel": 2.139
+     }
+    }
+   ]
+  }
+ }
+}
