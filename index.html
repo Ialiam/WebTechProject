@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trip Fuel Cost Calculator – Gas Cost by Car Year, Make &amp; Model</title>
+  <meta name="description" content="Free trip fuel cost calculator. Enter where you're starting, where you're going, and your car's year, make and model to see today's gas price and your total trip cost." />
+  <meta name="keywords" content="fuel cost calculator, gas cost calculator, trip cost, road trip gas, mpg calculator, gas price today" />
+  <meta property="og:title" content="Trip Fuel Cost Calculator" />
+  <meta property="og:description" content="See exactly how much gas your road trip will cost, based on your car and today's fuel prices." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛽</text></svg>" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!--
+    MONETIZATION: once your Google AdSense account is approved, paste the
+    AdSense <script> tag it gives you here, then replace each
+    <div class="ad-slot"> below with your <ins class="adsbygoogle"> ad unit.
+  -->
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./">⛽ <span>TripFuel</span>Cost</a>
+      <nav><a href="#how">How it works</a><a href="#faq">FAQ</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>How much will your trip cost in gas?</h1>
+      <p>Enter your route and your car. We'll look up its fuel economy and today's fuel price, then calculate your total trip cost.</p>
+    </section>
+
+    <div class="ad-slot ad-leaderboard" aria-hidden="true">Advertisement</div>
+
+    <div class="layout">
+      <form id="trip-form" class="card" novalidate>
+        <fieldset>
+          <legend><span class="step">1</span> Your route</legend>
+          <div class="field autocomplete">
+            <label for="from">From</label>
+            <input id="from" type="text" placeholder="City or address, e.g. Dallas, TX" autocomplete="off" required />
+            <ul class="suggestions" role="listbox"></ul>
+          </div>
+          <div class="field autocomplete">
+            <label for="to">To</label>
+            <input id="to" type="text" placeholder="City or address, e.g. Houston, TX" autocomplete="off" required />
+            <ul class="suggestions" role="listbox"></ul>
+          </div>
+          <label class="check"><input id="round-trip" type="checkbox" /> Round trip</label>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="step">2</span> Your car</legend>
+          <div class="grid-3">
+            <div class="field">
+              <label for="year">Year</label>
+              <select id="year" required><option value="">Loading…</option></select>
+            </div>
+            <div class="field">
+              <label for="make">Make</label>
+              <select id="make" required disabled><option value="">Select year</option></select>
+            </div>
+            <div class="field">
+              <label for="model">Model</label>
+              <select id="model" required disabled><option value="">Select make</option></select>
+            </div>
+          </div>
+          <div class="field" id="trim-field" hidden>
+            <label for="trim">Engine / trim</label>
+            <select id="trim"></select>
+          </div>
+          <p id="vehicle-info" class="vehicle-info" hidden></p>
+          <details class="manual">
+            <summary>Can't find your car? Enter MPG manually</summary>
+            <div class="field">
+              <label for="manual-mpg">Combined MPG</label>
+              <input id="manual-mpg" type="number" min="1" max="200" step="0.1" placeholder="e.g. 28" />
+            </div>
+          </details>
+        </fieldset>
+
+        <fieldset>
+          <legend><span class="step">3</span> Fuel price &amp; extras</legend>
+          <div class="grid-2">
+            <div class="field">
+              <label for="fuel-type">Fuel type</label>
+              <select id="fuel-type">
+                <option value="regular">Regular gasoline</option>
+                <option value="midgrade">Midgrade gasoline</option>
+                <option value="premium">Premium gasoline</option>
+                <option value="diesel">Diesel</option>
+                <option value="e85">E85</option>
+                <option value="electric">Electricity</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="price">Price <span id="price-unit">($/gal)</span></label>
+              <input id="price" type="number" min="0" step="0.01" />
+              <small id="price-source" class="hint">Loading today's price…</small>
+            </div>
+          </div>
+          <div class="field">
+            <label for="people">Split cost between <output id="people-out">1</output> <span id="people-word">person</span></label>
+            <input id="people" type="range" min="1" max="8" value="1" />
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn" id="calc-btn">Calculate trip cost</button>
+        <p id="form-error" class="error" role="alert" hidden></p>
+      </form>
+
+      <aside class="side">
+        <section id="results" class="card results" aria-live="polite" hidden>
+          <h2>Your trip</h2>
+          <p class="route-line" id="route-line"></p>
+          <div class="big-number">
+            <span class="label">Total fuel cost</span>
+            <span class="value" id="total-cost">$0.00</span>
+            <span class="sub" id="per-person"></span>
+          </div>
+          <dl class="stats">
+            <div><dt>Distance</dt><dd id="r-distance">–</dd></div>
+            <div><dt>Drive time</dt><dd id="r-time">–</dd></div>
+            <div><dt>Fuel used</dt><dd id="r-fuel">–</dd></div>
+            <div><dt>Fuel economy</dt><dd id="r-mpg">–</dd></div>
+            <div><dt>Fuel price</dt><dd id="r-price">–</dd></div>
+            <div><dt>Cost per mile</dt><dd id="r-cpm">–</dd></div>
+          </dl>
+          <p id="route-note" class="hint" hidden></p>
+          <div id="map" class="map"></div>
+          <button type="button" class="btn btn-ghost" id="share-btn">Copy shareable link</button>
+        </section>
+
+        <section class="card prices">
+          <h2>Today's average fuel prices (US)</h2>
+          <table>
+            <tbody id="price-table">
+              <tr><td colspan="2" class="hint">Loading…</td></tr>
+            </tbody>
+          </table>
+          <small class="hint" id="price-table-note">Source: U.S. Dept. of Energy / EIA national averages.</small>
+        </section>
+
+        <div class="ad-slot ad-rect" aria-hidden="true">Advertisement</div>
+      </aside>
+    </div>
+
+    <section id="how" class="content card">
+      <h2>How it works</h2>
+      <ol>
+        <li><strong>Route</strong> – we find the driving distance between your start and destination using OpenStreetMap routing.</li>
+        <li><strong>Car</strong> – we look up your vehicle's official EPA combined MPG from FuelEconomy.gov.</li>
+        <li><strong>Fuel price</strong> – we load today's national average price for your car's fuel type. You can edit it to match your local pump price.</li>
+        <li><strong>Cost</strong> – <code>distance ÷ MPG × price per gallon</code>. Round trip doubles it.</li>
+      </ol>
+    </section>
+
+    <section id="faq" class="content card">
+      <h2>Frequently asked questions</h2>
+      <details><summary>How accurate is the estimate?</summary><p>EPA ratings are measured under standard conditions. Highway speed, AC use, cargo, tire pressure and traffic can change real-world economy by 10–20%. Use the MPG field to override if you know your own average.</p></details>
+      <details><summary>Where do fuel prices come from?</summary><p>National averages published by the U.S. Energy Information Administration via FuelEconomy.gov, updated weekly. Local prices vary — type in what your station charges for the most precise number.</p></details>
+      <details><summary>Does it work for electric cars?</summary><p>Yes. For EVs we use the EPA kWh-per-100-miles rating and the average residential electricity price.</p></details>
+      <details><summary>Is it free?</summary><p>Yes, completely free. No sign-up required.</p></details>
+    </section>
+
+    <div class="ad-slot ad-leaderboard" aria-hidden="true">Advertisement</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Estimates only. Vehicle data: <a href="https://www.fueleconomy.gov" rel="noopener" target="_blank">FuelEconomy.gov</a>. Maps &amp; routing: © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> contributors, <a href="https://photon.komoot.io" rel="noopener" target="_blank">Photon</a>, <a href="https://project-osrm.org" rel="noopener" target="_blank">OSRM</a>.</p>
+      <p><a href="privacy.html">Privacy policy</a> · © <span id="year-now"></span> TripFuelCost</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="vehicles-fallback.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
