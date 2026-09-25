@@ -48,8 +48,13 @@ window.FALLBACK_VEHICLES = {
   "Volkswagen": { "Jetta": { mpg: 34, fuel: "regular" }, "Tiguan": { mpg: 26, fuel: "regular" } }
 };
 
-// Used when the live fuel price feed is unreachable. The user can always edit
-// the price field to match their local pump.
+// Used when no live price is available. The user can always edit the price
+// field to match their local pump.
+// US: USD per gallon (electricity USD per kWh).
 window.FALLBACK_PRICES = {
   regular: 3.15, midgrade: 3.60, premium: 3.95, diesel: 3.70, e85: 2.80, electric: 0.17
+};
+// Canada: rough national averages, CAD per litre (electricity CAD per kWh).
+window.FALLBACK_PRICES_CA = {
+  regular: 1.55, midgrade: 1.72, premium: 1.85, diesel: 1.65, electric: 0.14
 };

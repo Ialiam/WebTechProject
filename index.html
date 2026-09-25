@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trip Fuel Cost Calculator – Gas Cost by Car Year, Make &amp; Model</title>
-  <meta name="description" content="Free trip fuel cost calculator. Enter where you're starting, where you're going, and your car's year, make and model to see today's gas price and your total trip cost." />
-  <meta name="keywords" content="fuel cost calculator, gas cost calculator, trip cost, road trip gas, mpg calculator, gas price today" />
+  <title>Trip Fuel Cost Calculator – Gas Cost by Car, in Miles or Kilometres</title>
+  <meta name="description" content="Free trip fuel cost calculator. Enter where you're starting, where you're going, and your car's year, make and model to see today's fuel price near you and your total trip cost, in miles and gallons or kilometres and litres." />
+  <meta name="keywords" content="fuel cost calculator, gas cost calculator, trip cost, road trip gas, mpg calculator, L/100 km calculator, gas price today, fuel price per litre" />
   <meta property="og:title" content="Trip Fuel Cost Calculator" />
   <meta property="og:description" content="See exactly how much gas your road trip will cost, based on your car and today's fuel prices." />
   <meta property="og:type" content="website" />
@@ -31,7 +31,7 @@
   <main class="container">
     <section class="hero">
       <h1>How much will your trip cost in gas?</h1>
-      <p>Enter your route and your car. We'll look up its fuel economy and today's fuel price, then calculate your total trip cost.</p>
+      <p>Enter your route and your car. We'll look up its fuel economy and today's fuel price near you, then calculate your total trip cost.</p>
     </section>
 
     <div class="ad-slot ad-leaderboard" aria-hidden="true">Advertisement</div>
@@ -40,6 +40,15 @@
       <form id="trip-form" class="card" novalidate>
         <fieldset>
           <legend><span class="step">1</span> Your route</legend>
+          <div class="field">
+            <label for="country">Country</label>
+            <select id="country"></select>
+          </div>
+          <div class="units" role="radiogroup" aria-label="Units">
+            <span class="units-label">Units</span>
+            <label><input type="radio" name="units" value="imperial" checked /> <span>Miles · gallons</span></label>
+            <label><input type="radio" name="units" value="metric" /> <span>Kilometres · litres</span></label>
+          </div>
           <div class="field autocomplete">
             <label for="from">From</label>
             <input id="from" type="text" placeholder="City or address, e.g. Dallas, TX" autocomplete="off" required />
@@ -75,10 +84,10 @@
           </div>
           <p id="vehicle-info" class="vehicle-info" hidden></p>
           <details class="manual">
-            <summary>Can't find your car? Enter MPG manually</summary>
+            <summary>Can't find your car? Enter its fuel economy manually</summary>
             <div class="field">
-              <label for="manual-mpg">Combined MPG</label>
-              <input id="manual-mpg" type="number" min="1" max="200" step="0.1" placeholder="e.g. 28" />
+              <label for="manual-mpg" id="manual-label">Combined MPG</label>
+              <input id="manual-mpg" type="number" min="0.1" max="300" step="0.1" placeholder="e.g. 28" />
             </div>
           </details>
         </fieldset>
@@ -99,7 +108,7 @@
             </div>
             <div class="field">
               <label for="price">Price <span id="price-unit">($/gal)</span></label>
-              <input id="price" type="number" min="0" step="0.01" />
+              <input id="price" type="number" min="0" step="0.001" />
               <small id="price-source" class="hint">Loading today's price…</small>
             </div>
           </div>
@@ -128,7 +137,7 @@
             <div><dt>Fuel used</dt><dd id="r-fuel">–</dd></div>
             <div><dt>Fuel economy</dt><dd id="r-mpg">–</dd></div>
             <div><dt>Fuel price</dt><dd id="r-price">–</dd></div>
-            <div><dt>Cost per mile</dt><dd id="r-cpm">–</dd></div>
+            <div><dt id="r-cpm-label">Cost per mile</dt><dd id="r-cpm">–</dd></div>
           </dl>
           <p id="route-note" class="hint" hidden></p>
           <div id="map" class="map"></div>
@@ -136,7 +145,7 @@
         </section>
 
         <section class="card prices">
-          <h2>Today's average fuel prices (US)</h2>
+          <h2 id="price-card-title">Today's average fuel prices (US)</h2>
           <table>
             <tbody id="price-table">
               <tr><td colspan="2" class="hint">Loading…</td></tr>
@@ -154,15 +163,16 @@
       <ol>
         <li><strong>Route</strong> – we find the driving distance between your start and destination using OpenStreetMap routing.</li>
         <li><strong>Car</strong> – we look up your vehicle's official EPA combined MPG from FuelEconomy.gov.</li>
-        <li><strong>Fuel price</strong> – we load today's national average price for your car's fuel type. You can edit it to match your local pump price.</li>
-        <li><strong>Cost</strong> – <code>distance ÷ MPG × price per gallon</code>. Round trip doubles it.</li>
+        <li><strong>Fuel price</strong> – we look up today's pump prices at gas stations near your starting point for your car's fuel type. You can always edit the price.</li>
+        <li><strong>Cost</strong> – <code>distance ÷ MPG × price per gallon</code>, or <code>distance × L/100 km ÷ 100 × price per litre</code>. Round trip doubles it.</li>
       </ol>
     </section>
 
     <section id="faq" class="content card">
       <h2>Frequently asked questions</h2>
       <details><summary>How accurate is the estimate?</summary><p>EPA ratings are measured under standard conditions. Highway speed, AC use, cargo, tire pressure and traffic can change real-world economy by 10–20%. Use the MPG field to override if you know your own average.</p></details>
-      <details><summary>Where do fuel prices come from?</summary><p>National averages published by the U.S. Energy Information Administration via FuelEconomy.gov, updated weekly. Local prices vary — type in what your station charges for the most precise number.</p></details>
+      <details><summary>Where do fuel prices come from?</summary><p>Where available, we use today's posted prices at gas stations near your starting point. Otherwise we use national averages (for the US, from the Energy Information Administration via FuelEconomy.gov, updated weekly). Type in what your station charges for the most precise number.</p></details>
+      <details><summary>Does it work in Canada and other countries?</summary><p>Yes. Choose your country at the top of the form. In the United States we show miles, gallons, MPG and US dollars. In Canada and most other countries we show kilometres, litres, L/100 km and the local currency. You can still switch units yourself.</p></details>
       <details><summary>Does it work for electric cars?</summary><p>Yes. For EVs we use the EPA kWh-per-100-miles rating and the average residential electricity price.</p></details>
       <details><summary>Is it free?</summary><p>Yes, completely free. No sign-up required.</p></details>
     </section>
@@ -178,6 +188,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="config.js" defer></script>
   <script src="vehicles-fallback.js" defer></script>
   <script src="app.js" defer></script>
 </body>
