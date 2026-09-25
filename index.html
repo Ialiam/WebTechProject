@@ -15,9 +15,10 @@
   <link rel="stylesheet" href="styles.css" />
 
   <!--
-    MONETIZATION: once your Google AdSense account is approved, paste the
-    AdSense <script> tag it gives you here, then replace each
-    <div class="ad-slot"> below with your <ins class="adsbygoogle"> ad unit.
+    MONETIZATION: the three ad spaces (<div class="ad-slot">) are hidden until
+    Google AdSense approves the site. Then paste the AdSense <script> tag it
+    gives you here, put your <ins class="adsbygoogle"> ad units inside the
+    ad-slot divs, and set showAds: true in config.js.
   -->
 </head>
 <body>
@@ -34,7 +35,7 @@
       <p>Enter your route and your car. We'll look up its fuel economy and today's fuel price near you, then calculate your total trip cost.</p>
     </section>
 
-    <div class="ad-slot ad-leaderboard" aria-hidden="true">Advertisement</div>
+    <div class="ad-slot ad-leaderboard" aria-hidden="true" hidden>Advertisement</div>
 
     <div class="layout">
       <form id="trip-form" class="card" novalidate>
@@ -158,7 +159,7 @@
           <small class="hint" id="price-table-note">Source: U.S. Dept. of Energy / EIA national averages.</small>
         </section>
 
-        <div class="ad-slot ad-rect" aria-hidden="true">Advertisement</div>
+        <div class="ad-slot ad-rect" aria-hidden="true" hidden>Advertisement</div>
       </aside>
     </div>
 
@@ -181,7 +182,7 @@
       <details><summary>Is it free?</summary><p>Yes, completely free. No sign-up required.</p></details>
     </section>
 
-    <div class="ad-slot ad-leaderboard" aria-hidden="true">Advertisement</div>
+    <div class="ad-slot ad-leaderboard" aria-hidden="true" hidden>Advertisement</div>
   </main>
 
   <footer class="site-footer">
