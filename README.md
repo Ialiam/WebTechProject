@@ -32,8 +32,8 @@ python3 -m http.server 8000
 
 ## Deploy for free (GitHub Pages)
 
-1. Merge this branch into `main`.
-2. In the GitHub repo, go to **Settings → Pages**. Set the source to **Deploy from a branch**, with branch `main` and folder `/ (root)`.
+1. Merge this branch into `master`.
+2. In the GitHub repo, go to **Settings → Pages**. Set the source to **Deploy from a branch**, with branch `master` and folder `/ (root)`.
 3. The site goes live at `https://<your-username>.github.io/WebTechProject/`.
 4. Optional: buy a domain (for example `tripfuelcost.com`) and add it under **Custom domain**. A real domain helps a lot with ad approval and SEO.
 
