@@ -14,11 +14,13 @@
   const FIRST_YEAR = 1984;
   const STATION_CACHE_MS = 30 * 60 * 1000;
   const STALE_PRICE_MS = 7 * 24 * 60 * 60 * 1000;
+  const CITY_PRICE_RADIUS_KM = 100;
 
   const $ = (id) => document.getElementById(id);
   const el = {
     form: $("trip-form"), country: $("country"), from: $("from"), to: $("to"), roundTrip: $("round-trip"),
     unitRadios: document.querySelectorAll('input[name="units"]'),
+    priceModeRadios: document.querySelectorAll('input[name="price-mode"]'),
     year: $("year"), make: $("make"), model: $("model"), trim: $("trim"), trimField: $("trim-field"),
     vehicleInfo: $("vehicle-info"), manualMpg: $("manual-mpg"), manualLabel: $("manual-label"),
     fuelType: $("fuel-type"), price: $("price"), priceUnit: $("price-unit"), priceSource: $("price-source"),
@@ -37,13 +39,14 @@
     country: guessCountry(),
     currency: "USD",
     priceUnit: "gal",       // unit of the number currently in the price field: "gal", "L" or "kWh"
-    priceEdited: false,     // true once the user types their own price
+    priceEdited: false,     // true in "Type the pump price" mode
     restoring: false,
     vehicleSource: "api",   // "api" or "fallback" (FuelEconomy.gov unreachable)
     vehicle: null,          // { label, mpg, kwhPer100, fuel }
     usPrices: null,         // US national averages, USD per gallon (per kWh for electric)
     usPricesLive: false,
     stations: null,         // nearby station prices, see fetchStations()
+    cityPrices: null,       // daily city averages from data/prices.json
     startPlaceTask: null,
     places: { from: null, to: null }, // { label, lat, lon, country }
     lastTrip: null,
@@ -196,7 +199,7 @@
     if (!changed) return;
     state.unitsChosen = false;
     setUnits(unitsFor(code));
-    if (!state.restoring) state.priceEdited = false;
+    if (state.priceEdited && !state.restoring) state.currency = currencyFor(code);
     const from = state.places.from;
     if (from && (from.country || "").toUpperCase() !== code) state.stations = null;
     applyAutoPrice();
@@ -270,7 +273,37 @@
     }
   }
 
-  // Best automatic price for a fuel type: nearby stations first, then averages.
+  // Daily city average prices, collected by .github/workflows/update-prices.yml.
+  async function loadCityPrices() {
+    try {
+      state.cityPrices = await fetchJSON("data/prices.json", { timeout: 8000 });
+    } catch (err) {
+      console.warn("City fuel prices unavailable:", err);
+      state.cityPrices = null;
+    }
+  }
+
+  const shortDate = (iso) =>
+    new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+  // Price data for the selected country: { currency, unit, source, national, cities }.
+  const countryPrices = () => (state.cityPrices && state.cityPrices.countries || {})[state.country] || null;
+
+  // The priced city closest to the starting point, if one is close enough.
+  function nearestPricedCity() {
+    const data = countryPrices();
+    const from = state.places.from;
+    if (!data || !from) return null;
+    let best = null;
+    for (const city of data.cities || []) {
+      const km = haversineMiles(from, city) * KM_PER_MILE;
+      if (km <= CITY_PRICE_RADIUS_KM && (!best || km < best.km)) best = { ...city, km };
+    }
+    return best;
+  }
+
+  // Best automatic price for a fuel type: nearby stations, then the nearest
+  // city's daily average, then national averages.
   // Returns { value, unit, currency, note, live } or null.
   function autoPrice(fuel) {
     const st = state.stations;
@@ -288,20 +321,34 @@
         };
       }
     }
+    const data = countryPrices();
+    const city = nearestPricedCity();
+    if (city && city.prices[fuel]) {
+      return {
+        value: city.prices[fuel], unit: data.unit, currency: data.currency, live: true,
+        note: `Average price in ${city.name} on ${shortDate(city.date)}, from ${data.source}.`,
+      };
+    }
+    if (data && data.national && data.national.prices[fuel]) {
+      return {
+        value: data.national.prices[fuel], unit: data.unit, currency: data.currency, live: true,
+        note: `${data.national.name} average on ${shortDate(data.national.date)}, from ${data.source}.`,
+      };
+    }
     if (state.country === "US" && state.usPrices && state.usPrices[fuel]) {
       return {
         value: state.usPrices[fuel], unit: fuel === "electric" ? "kWh" : "gal", currency: "USD",
         live: state.usPricesLive,
         note: state.usPricesLive
-          ? `This week's US average for ${FUEL_LABELS[fuel].toLowerCase()}. Edit to use your local price.`
-          : "Typical US average. Edit to use your local price.",
+          ? `This week's US average for ${FUEL_LABELS[fuel].toLowerCase()}.`
+          : "Typical US average. Live prices are unavailable right now.",
       };
     }
     const ca = window.FALLBACK_PRICES_CA || {};
     if (state.country === "CA" && ca[fuel]) {
       return {
         value: ca[fuel], unit: fuel === "electric" ? "kWh" : "L", currency: "CAD", live: false,
-        note: "Rough Canadian average. Edit to match your local station.",
+        note: "Rough Canadian average. Live prices are unavailable right now.",
       };
     }
     return null;
@@ -310,6 +357,19 @@
   function setPriceField(value, unit) {
     el.price.value = value.toFixed(unit === "gal" ? 2 : 3);
     state.priceUnit = unit;
+  }
+
+  // "auto": fill in today's price for the route. "manual": the user types the pump price.
+  function setPriceMode(mode) {
+    state.priceEdited = mode === "manual";
+    for (const r of el.priceModeRadios) r.checked = r.value === mode;
+    el.priceSource.classList.remove("price-hint-ok");
+    if (mode === "auto") {
+      applyAutoPrice();
+    } else {
+      state.priceUnit = fuelUnit();
+      el.priceSource.textContent = "Type the price shown at the pump.";
+    }
   }
 
   function applyAutoPrice() {
@@ -328,7 +388,7 @@
       state.currency = currencyFor(state.country);
       el.price.value = "";
       state.priceUnit = fuelUnit(fuel);
-      el.priceSource.textContent = "Enter the price at your local station.";
+      el.priceSource.textContent = "We don't have today's prices for this country yet. Type the price shown at the pump.";
       el.priceSource.classList.remove("price-hint-ok");
     }
     updateUnitLabels();
@@ -407,7 +467,6 @@
   // country and look up prices near it.
   async function onStartPlace(place) {
     if (place.country) setCountry(place.country.toUpperCase());
-    if (!state.restoring) state.priceEdited = false;
     state.stations = null;
     applyAutoPrice();
     renderPriceCard();
@@ -461,7 +520,15 @@
       }
     };
 
-    if (state.country === "CA") {
+    const data = countryPrices();
+    const city = nearestPricedCity();
+    const avg = city || (data && data.national);
+    if (avg) {
+      el.priceCardTitle.textContent = `Fuel prices in ${avg.name}`;
+      table(avg.prices, data.currency, data.unit);
+      el.priceTableNote.textContent = `Average pump prices on ${shortDate(avg.date)}. Source: ${data.source}.`
+        + (city ? "" : " Enter your starting city to see its local average.");
+    } else if (state.country === "CA") {
       el.priceCardTitle.textContent = "Typical fuel prices (Canada)";
       table(window.FALLBACK_PRICES_CA || {}, "CAD", "L");
       el.priceTableNote.textContent = "Rough national averages in CAD. Prices vary by city, so edit the price in the form to match your station.";
@@ -635,7 +702,6 @@
   }
 
   function onFuelTypeChange() {
-    if (!state.restoring) state.priceEdited = false;
     applyAutoPrice();
     renderPriceCard();
   }
@@ -950,7 +1016,7 @@
       if (p.get("mpg")) el.manualMpg.value = p.get("mpg");
       if (parseFloat(p.get("price")) > 0) {
         if (/^[A-Z]{3}$/.test(p.get("cur") || "")) state.currency = p.get("cur");
-        state.priceEdited = true;
+        setPriceMode("manual");
         setPriceField(parseFloat(p.get("price")), fuelUnit());
         el.priceSource.textContent = "Price from the shared link. Edit it if needed.";
       }
@@ -979,10 +1045,18 @@
     if (state.lastTrip) calculate();
   });
   el.price.addEventListener("input", () => {
-    state.priceEdited = true;
-    el.priceSource.textContent = "Using your price.";
-    el.priceSource.classList.remove("price-hint-ok");
+    if (!state.priceEdited) setPriceMode("manual");
+    el.priceSource.textContent = "Using the price you typed.";
   });
+  for (const r of el.priceModeRadios) {
+    r.addEventListener("change", () => {
+      setPriceMode(r.value);
+      if (r.value === "manual") {
+        el.price.value = "";
+        el.price.focus();
+      }
+    });
+  }
   for (const r of el.unitRadios) {
     r.addEventListener("change", () => {
       state.unitsChosen = true;
@@ -1011,7 +1085,7 @@
   setUnits(unitsFor(state.country));
   updateUnitLabels();
 
-  Promise.all([loadUsPrices(), loadYears()]).then(() => {
+  Promise.all([loadUsPrices(), loadCityPrices(), loadYears()]).then(() => {
     applyAutoPrice();
     renderPriceCard();
     return restoreFromUrl();
