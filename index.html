@@ -125,28 +125,29 @@
           </div>
         </fieldset>
 
-        <button type="submit" class="btn" id="calc-btn">Calculate trip cost</button>
+        <button type="submit" class="btn" id="calc-btn">Estimate trip cost</button>
         <p id="form-error" class="error" role="alert" hidden></p>
       </form>
 
       <aside class="side">
         <section id="results" class="card results" aria-live="polite" hidden>
-          <h2>Your trip</h2>
+          <h2>Your trip estimate</h2>
           <p class="route-line" id="route-line"></p>
           <div class="big-number">
-            <span class="label">Total fuel cost</span>
+            <span class="label">Estimated fuel cost</span>
             <span class="value" id="total-cost">$0.00</span>
             <span class="sub" id="per-person"></span>
           </div>
           <dl class="stats">
             <div><dt>Distance</dt><dd id="r-distance">–</dd></div>
-            <div><dt>Drive time</dt><dd id="r-time">–</dd></div>
-            <div><dt>Fuel used</dt><dd id="r-fuel">–</dd></div>
+            <div><dt>Est. drive time</dt><dd id="r-time">–</dd></div>
+            <div><dt>Est. fuel used</dt><dd id="r-fuel">–</dd></div>
             <div><dt>Fuel economy</dt><dd id="r-mpg">–</dd></div>
             <div><dt>Fuel price</dt><dd id="r-price">–</dd></div>
-            <div><dt id="r-cpm-label">Cost per mile</dt><dd id="r-cpm">–</dd></div>
+            <div><dt id="r-cpm-label">Est. cost per mile</dt><dd id="r-cpm">–</dd></div>
           </dl>
           <p id="route-note" class="hint" hidden></p>
+          <p class="hint disclaimer">This is an estimate for planning your trip. Your actual cost can be higher or lower depending on your speed, traffic, weather, cargo, your car's condition and the price you pay at the pump.</p>
           <div id="map" class="map"></div>
           <button type="button" class="btn btn-ghost" id="share-btn">Copy shareable link</button>
         </section>
@@ -175,6 +176,13 @@
       </ol>
     </section>
 
+    <section id="trips" class="content card">
+      <h2>Popular trips</h2>
+      <ul class="trip-links">
+        <li><a href="toronto-to-montreal-gas-cost.html">Toronto to Montreal gas cost</a> <span class="hint">540 km · Highway 401 and Autoroute 20</span></li>
+      </ul>
+    </section>
+
     <section id="faq" class="content card">
       <h2>Frequently asked questions</h2>
       <details><summary>How accurate is the estimate?</summary><p>EPA ratings are measured under standard conditions. Highway speed, AC use, cargo, tire pressure and traffic can change real-world economy by 10–20%. Use the MPG field to override if you know your own average.</p></details>
@@ -189,7 +197,8 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>Estimates only. Vehicle data: <a href="https://www.fueleconomy.gov" rel="noopener" target="_blank">FuelEconomy.gov</a>. Maps &amp; routing: © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> contributors, <a href="https://photon.komoot.io" rel="noopener" target="_blank">Photon</a>, <a href="https://valhalla.github.io/valhalla/" rel="noopener" target="_blank">Valhalla</a> (FOSSGIS), <a href="https://project-osrm.org" rel="noopener" target="_blank">OSRM</a>.</p>
+      <p><strong>All results are estimates for trip planning and are not guaranteed.</strong> Real fuel use and prices vary.</p>
+      <p>Vehicle data: <a href="https://www.fueleconomy.gov" rel="noopener" target="_blank">FuelEconomy.gov</a>. Maps &amp; routing: © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> contributors, <a href="https://photon.komoot.io" rel="noopener" target="_blank">Photon</a>, <a href="https://valhalla.github.io/valhalla/" rel="noopener" target="_blank">Valhalla</a> (FOSSGIS), <a href="https://project-osrm.org" rel="noopener" target="_blank">OSRM</a>.</p>
       <p><a href="privacy.html">Privacy policy</a> · © <span id="year-now"></span> TripFuelCost</p>
     </div>
   </footer>

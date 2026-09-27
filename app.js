@@ -970,7 +970,7 @@
       showError(err.message || "Something went wrong. Please try again.");
     } finally {
       el.calcBtn.disabled = false;
-      el.calcBtn.textContent = "Calculate trip cost";
+      el.calcBtn.textContent = "Estimate trip cost";
     }
   }
 
@@ -982,9 +982,9 @@
     const km = t.miles * KM_PER_MILE;
 
     el.routeLine.textContent = `${t.a.label} → ${t.b.label}${t.trips === 2 ? " (round trip)" : ""}`;
-    el.totalLabel.textContent = cur === "USD" ? "Total fuel cost" : `Total fuel cost (${cur})`;
+    el.totalLabel.textContent = cur === "USD" ? "Estimated fuel cost" : `Estimated fuel cost (${cur})`;
     el.totalCost.textContent = cash(t.cost);
-    el.perPerson.textContent = t.people > 1 ? `${cash(t.cost / t.people)} per person (${t.people} people)` : "";
+    el.perPerson.textContent = t.people > 1 ? `About ${cash(t.cost / t.people)} per person (${t.people} people)` : "";
     el.rDistance.textContent = m ? `${num(km, 0)} km` : `${num(t.miles, 0)} mi`;
     el.rTime.textContent = formatDuration(t.seconds);
 
@@ -1006,7 +1006,7 @@
     if (t.economy.manual) el.rMpg.textContent += " (manual)";
 
     const perDist = t.cost / (m ? km : t.miles);
-    el.rCpmLabel.textContent = m ? "Cost per km" : "Cost per mile";
+    el.rCpmLabel.textContent = m ? "Est. cost per km" : "Est. cost per mile";
     el.rCpm.textContent = cur === "USD" || cur === "CAD" ? `${num(perDist * 100, 1)}¢` : cash(perDist, 3);
 
     el.routeNote.hidden = !t.estimated;
@@ -1074,7 +1074,14 @@
         el.priceSource.textContent = "Price from the shared link. Edit it if needed.";
       }
       updateUnitLabels();
-      await calculate();
+      if (getEconomy()) {
+        await calculate();
+      } else {
+        // A route-only link (e.g. from a route page): fill in the trip, look up
+        // the local price, and let the visitor choose their car.
+        resolvePlace("from", el.from).catch((err) => console.warn(err));
+        el.year.focus();
+      }
     } finally {
       state.restoring = false;
     }
