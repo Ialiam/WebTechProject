@@ -172,3 +172,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .price-hint-ok { color: var(--accent); }
 
 .price-mode { margin-bottom: 12px; }
+
+.trip-links { margin: 0; padding-left: 18px; }
+.trip-links li { margin: 6px 0; }
