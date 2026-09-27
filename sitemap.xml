@@ -11,6 +11,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://tripfuelcost.ca/toronto-to-ottawa-gas-cost.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tripfuelcost.ca/sudbury-to-toronto-gas-cost.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://tripfuelcost.ca/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
