@@ -1,5 +1,7 @@
 # TripFuelCost – Trip Fuel Cost Calculator
 
+Live at **https://tripfuelcost.ca**
+
 A free website that tells people how much a drive will cost in fuel.
 
 1. The user types a **From** and **To** location. Suggestions appear as they type.
@@ -67,8 +69,8 @@ python3 -m http.server 8000
 
 1. Merge this branch into `master`.
 2. In the GitHub repo, go to **Settings → Pages**. Set the source to **Deploy from a branch**, with branch `master` and folder `/ (root)`.
-3. The site goes live at `https://<your-username>.github.io/WebTechProject/`.
-4. Optional: buy a domain (for example `tripfuelcost.com`) and add it under **Custom domain**. A real domain helps a lot with ad approval and SEO.
+3. The site is served at **https://tripfuelcost.ca** (set by the `CNAME` file). The domain's DNS at Porkbun has four A records for the root (`185.199.108.153` to `185.199.111.153`) and a `www` CNAME to `ialiam.github.io`.
+4. `robots.txt` and `sitemap.xml` tell search engines what to index. Add any new pages to `sitemap.xml`.
 
 ## Making money from it
 
