@@ -20,6 +20,10 @@
   const STALE_PRICE_MS = 7 * 24 * 60 * 60 * 1000;
   const CITY_PRICE_RADIUS_KM = 100;
 
+  // IANA time zones used in Canada and in the US (see guessCountry()).
+  const CANADA_TIME_ZONES = /^America\/(Toronto|Montreal|Vancouver|Edmonton|Calgary|Winnipeg|Regina|Swift_Current|Halifax|Glace_Bay|Moncton|Goose_Bay|St_Johns|Whitehorse|Dawson|Dawson_Creek|Fort_Nelson|Creston|Yellowknife|Inuvik|Cambridge_Bay|Iqaluit|Pangnirtung|Rankin_Inlet|Resolute|Atikokan|Thunder_Bay|Nipigon|Rainy_River|Blanc-Sablon)$|^Canada\//;
+  const US_TIME_ZONES = /^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Juneau|Sitka|Metlakatla|Yakutat|Nome|Adak|Boise|Detroit|Menominee|Indiana\/.+|Kentucky\/.+|North_Dakota\/.+)$|^Pacific\/Honolulu$|^US\//;
+
   const $ = (id) => document.getElementById(id);
   const el = {
     form: $("trip-form"), country: $("country"), from: $("from"), to: $("to"), roundTrip: $("round-trip"),
@@ -116,10 +120,19 @@
 
   // ---------- helpers ----------
 
+  // The visitor's likely country. Canada is the default: many devices in
+  // Canada are set to "English (US)", so the language alone can't be trusted.
+  // The device's time zone is a better clue for Canada vs the US; the
+  // language's region is only used for other countries (e.g. en-GB, fr-FR).
   function guessCountry() {
+    let zone = "";
+    try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch { /* old browser */ }
+    if (CANADA_TIME_ZONES.test(zone)) return "CA";
+    if (US_TIME_ZONES.test(zone)) return "US";
     const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
     const m = lang.match(/[-_]([A-Za-z]{2})\b/);
-    return m ? m[1].toUpperCase() : "US";
+    const region = m ? m[1].toUpperCase() : "";
+    return region && region !== "US" ? region : "CA";
   }
 
   async function fetchJSON(url, { timeout = 12000, headers = {}, method = "GET", body } = {}) {
@@ -209,7 +222,7 @@
     for (const [code, label] of [...pinned.map((c) => [c, name(c)]), ...rest]) {
       el.country.add(new Option(`${label} (${currencyFor(code)})`, code));
     }
-    if (!CURRENCIES[state.country]) state.country = "US";
+    if (!CURRENCIES[state.country]) state.country = "CA";
     el.country.value = state.country;
     updatePlaceholders();
   }
