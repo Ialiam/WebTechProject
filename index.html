@@ -102,6 +102,7 @@
               <input id="manual-mpg" type="number" min="0.1" max="300" step="0.1" placeholder="e.g. 28" />
             </div>
           </details>
+          <button type="button" class="link-btn compare-link" id="compare-link">＋ Compare with another car</button>
         </fieldset>
 
         <fieldset>
@@ -157,8 +158,8 @@
           </dl>
           <p id="route-note" class="hint" hidden></p>
           <p class="hint disclaimer">This is an estimate for planning your trip. Your actual cost can be higher or lower depending on your speed, traffic, weather, cargo, your car's condition and the price you pay at the pump.</p>
+          <button type="button" class="btn btn-ghost" id="compare-btn">＋ Compare with another car</button>
           <div id="map" class="map"></div>
-          <button type="button" class="btn btn-ghost" id="compare-btn">Compare with another car</button>
           <button type="button" class="btn btn-ghost" id="share-btn">Copy shareable link</button>
         </section>
 
@@ -266,6 +267,7 @@
       <details><summary>How accurate is the estimate?</summary><p>EPA ratings are measured under standard conditions. Highway speed, AC use, cargo, tire pressure and traffic can change real-world economy by 10–20%. Use the MPG field to override if you know your own average.</p></details>
       <details><summary>Where do fuel prices come from?</summary><p>Where available, we use today's posted prices at gas stations near your starting point. Otherwise we use national averages (for the US, from the Energy Information Administration via FuelEconomy.gov, updated weekly). Type in what your station charges for the most precise number.</p></details>
       <details><summary>Does it work in Canada and other countries?</summary><p>Yes. Choose your country at the top of the form. In the United States we show miles, gallons, MPG and US dollars. In Canada and most other countries we show kilometres, litres, L/100 km and the local currency. You can still switch units yourself.</p></details>
+      <details><summary>Can I compare two cars?</summary><p>Yes. Tap "Compare with another car" under your car, or below your estimate, and pick a second car. You'll see both costs side by side for the same trip, each using the price of its own fuel (for example premium, diesel or electricity), and how much you'd save with the cheaper one.</p></details>
       <details><summary>Does it work for electric cars?</summary><p>Yes. For EVs we use the EPA kWh-per-100-miles rating and the average residential electricity price.</p></details>
       <details><summary>Is it free?</summary><p>Yes, completely free. No sign-up required.</p></details>
     </section>

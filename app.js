@@ -59,7 +59,7 @@
     shareBtn: $("share-btn"), priceCardTitle: $("price-card-title"), priceTable: $("price-table"),
     priceTableNote: $("price-table-note"),
     // Second-car comparison
-    compareBtn: $("compare-btn"), compare: $("compare"), compareRemove: $("compare-remove"),
+    compareBtn: $("compare-btn"), compareLink: $("compare-link"), compare: $("compare"), compareRemove: $("compare-remove"),
     c2ManualDetails: $("c2-manual"), c2Manual: $("c2-manual-mpg"), c2ManualLabel: $("c2-manual-label"),
     c2Fuel: $("c2-fuel-type"), c2Price: $("c2-price"), c2PriceUnit: $("c2-price-unit"), c2PriceSource: $("c2-price-source"),
     compareError: $("compare-error"), compareResults: $("compare-results"), compareSummary: $("compare-summary"),
@@ -1473,6 +1473,15 @@
   el.compareBtn.addEventListener("click", () => {
     openCompare();
     compareCar.year.focus();
+  });
+  // The link under the first car: estimates the trip first if needed (so any
+  // missing route or car is reported as usual), then opens the comparison.
+  el.compareLink.addEventListener("click", async () => {
+    if (!state.lastTrip) await calculate();
+    if (!state.lastTrip) return;
+    openCompare();
+    el.compare.scrollIntoView({ behavior: "smooth", block: "start" });
+    compareCar.year.focus({ preventScroll: true });
   });
   el.compareRemove.addEventListener("click", () => {
     closeCompare();
