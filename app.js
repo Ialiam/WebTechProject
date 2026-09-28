@@ -24,6 +24,25 @@
   const CANADA_TIME_ZONES = /^America\/(Toronto|Montreal|Vancouver|Edmonton|Calgary|Winnipeg|Regina|Swift_Current|Halifax|Glace_Bay|Moncton|Goose_Bay|St_Johns|Whitehorse|Dawson|Dawson_Creek|Fort_Nelson|Creston|Yellowknife|Inuvik|Cambridge_Bay|Iqaluit|Pangnirtung|Rankin_Inlet|Resolute|Atikokan|Thunder_Bay|Nipigon|Rainy_River|Blanc-Sablon)$|^Canada\//;
   const US_TIME_ZONES = /^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Juneau|Sitka|Metlakatla|Yakutat|Nome|Adak|Boise|Detroit|Menominee|Indiana\/.+|Kentucky\/.+|North_Dakota\/.+)$|^Pacific\/Honolulu$|^US\//;
 
+  // Time zones of the other countries in the country list.
+  const COUNTRY_TIME_ZONES = {
+    GB: /^Europe\/London$/, IE: /^Europe\/Dublin$/, AU: /^Australia\//, NZ: /^Pacific\/(Auckland|Chatham)$/,
+    IN: /^Asia\/(Kolkata|Calcutta)$/, PK: /^Asia\/Karachi$/, BD: /^Asia\/(Dhaka|Dacca)$/,
+    AE: /^Asia\/Dubai$/, SA: /^Asia\/Riyadh$/, QA: /^Asia\/Qatar$/,
+    MX: /^America\/(Mexico_City|Cancun|Merida|Monterrey|Matamoros|Chihuahua|Ciudad_Juarez|Ojinaga|Mazatlan|Bahia_Banderas|Hermosillo|Tijuana)$/,
+    BR: /^America\/(Sao_Paulo|Manaus|Fortaleza|Recife|Bahia|Belem|Cuiaba|Campo_Grande|Porto_Velho|Boa_Vista|Rio_Branco|Maceio|Araguaina|Santarem|Noronha|Eirunepe)$/,
+    ZA: /^Africa\/Johannesburg$/, NG: /^Africa\/Lagos$/, KE: /^Africa\/Nairobi$/, EG: /^Africa\/Cairo$/,
+    CH: /^Europe\/Zurich$/, JP: /^Asia\/Tokyo$/, SE: /^Europe\/Stockholm$/, NO: /^Europe\/Oslo$/,
+    DK: /^Europe\/Copenhagen$/, PL: /^Europe\/Warsaw$/, TR: /^Europe\/Istanbul$/,
+    PH: /^Asia\/Manila$/, MY: /^Asia\/(Kuala_Lumpur|Kuching)$/, SG: /^Asia\/Singapore$/,
+    AT: /^Europe\/Vienna$/, BE: /^Europe\/Brussels$/, CY: /^(Asia|Europe)\/(Nicosia|Famagusta)$/,
+    DE: /^Europe\/(Berlin|Busingen)$/, EE: /^Europe\/Tallinn$/, ES: /^(Europe\/Madrid|Atlantic\/Canary|Africa\/Ceuta)$/,
+    FI: /^Europe\/Helsinki$/, FR: /^Europe\/Paris$/, GR: /^Europe\/Athens$/, HR: /^Europe\/Zagreb$/,
+    IT: /^Europe\/Rome$/, LT: /^Europe\/Vilnius$/, LU: /^Europe\/Luxembourg$/, LV: /^Europe\/Riga$/,
+    MT: /^Europe\/Malta$/, NL: /^Europe\/Amsterdam$/, PT: /^(Europe\/Lisbon|Atlantic\/(Madeira|Azores))$/,
+    SI: /^Europe\/Ljubljana$/, SK: /^Europe\/Bratislava$/,
+  };
+
   const $ = (id) => document.getElementById(id);
   const el = {
     form: $("trip-form"), country: $("country"), from: $("from"), to: $("to"), roundTrip: $("round-trip"),
@@ -120,19 +139,25 @@
 
   // ---------- helpers ----------
 
-  // The visitor's likely country. Canada is the default: many devices in
-  // Canada are set to "English (US)", so the language alone can't be trusted.
-  // The device's time zone is a better clue for Canada vs the US; the
-  // language's region is only used for other countries (e.g. en-GB, fr-FR).
+  // The visitor's likely country. Phones set their time zone from where they
+  // are, so it's the best clue; the language often isn't (many devices in
+  // Canada, Bangladesh and elsewhere are set to "English (US)").
+  //   1. A time zone we recognise gives that country.
+  //   2. Otherwise a language region in our country list other than US (e.g. bn-BD, en-GB).
+  //   3. Otherwise: a real time zone we don't list means somewhere outside
+  //      Canada, so use the US; no useful time zone at all means Canada.
   function guessCountry() {
     let zone = "";
     try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch { /* old browser */ }
     if (CANADA_TIME_ZONES.test(zone)) return "CA";
     if (US_TIME_ZONES.test(zone)) return "US";
+    const fromZone = Object.keys(COUNTRY_TIME_ZONES).find((c) => COUNTRY_TIME_ZONES[c].test(zone));
+    if (fromZone) return fromZone;
     const lang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
     const m = lang.match(/[-_]([A-Za-z]{2})\b/);
     const region = m ? m[1].toUpperCase() : "";
-    return region && region !== "US" ? region : "CA";
+    if (region === "CA" || COUNTRY_TIME_ZONES[region]) return region; // a country in our list
+    return /\//.test(zone) && !/^Etc\//.test(zone) ? "US" : "CA";
   }
 
   async function fetchJSON(url, { timeout = 12000, headers = {}, method = "GET", body } = {}) {
