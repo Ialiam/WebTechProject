@@ -183,6 +183,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .compare > .hint { margin: 4px 0 14px; }
 .link-btn { background: none; border: 0; padding: 4px 0; font: inherit; font-size: .9rem; font-weight: 600; color: var(--accent); cursor: pointer; text-decoration: underline; }
 .link-btn:hover { color: var(--accent-strong); }
+.compare-link { display: block; margin-top: 8px; font-size: .95rem; text-decoration: none; }
+.compare-link:hover { text-decoration: underline; }
+#compare-btn { margin-top: 12px; }
 .compare-picker { border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 14px; }
 .compare-summary { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; font-weight: 700; }
 .compare-summary small { display: block; font-weight: 400; color: var(--muted); margin-top: 2px; }
