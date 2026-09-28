@@ -35,6 +35,12 @@
     rPrice: $("r-price"), rCpm: $("r-cpm"), rCpmLabel: $("r-cpm-label"), routeNote: $("route-note"), map: $("map"),
     shareBtn: $("share-btn"), priceCardTitle: $("price-card-title"), priceTable: $("price-table"),
     priceTableNote: $("price-table-note"),
+    // Second-car comparison
+    compareBtn: $("compare-btn"), compare: $("compare"), compareRemove: $("compare-remove"),
+    c2ManualDetails: $("c2-manual"), c2Manual: $("c2-manual-mpg"), c2ManualLabel: $("c2-manual-label"),
+    c2Fuel: $("c2-fuel-type"), c2Price: $("c2-price"), c2PriceUnit: $("c2-price-unit"), c2PriceSource: $("c2-price-source"),
+    compareError: $("compare-error"), compareResults: $("compare-results"), compareSummary: $("compare-summary"),
+    cmpCar1: $("cmp-car1"), cmpCar2: $("cmp-car2"),
   };
 
   const state = {
@@ -46,7 +52,7 @@
     priceEdited: false,     // true in "Type the pump price" mode
     restoring: false,
     vehicleSource: "api",   // "api" or "fallback" (FuelEconomy.gov unreachable)
-    vehicle: null,          // { label, mpg, kwhPer100, fuel }
+    years: [],              // model years offered in both car pickers
     usPrices: null,         // US national averages, USD per gallon (per kWh for electric)
     usPricesLive: false,
     stations: null,         // nearby station prices, see fetchStations()
@@ -56,6 +62,32 @@
     lastTrip: null,
     map: null,
     mapLayer: null,
+  };
+
+  // A year → make → model → trim picker backed by FuelEconomy.gov (or the
+  // built-in fallback list). The trip's car and the comparison car each have
+  // one; `vehicle` is the chosen car: { label, mpg, kwhPer100, fuel }.
+  const mainCar = {
+    year: el.year, make: el.make, model: el.model, trim: el.trim, trimField: el.trimField, info: el.vehicleInfo,
+    vehicle: null,
+    // The trip's fuel type (and so its price) follows the chosen car.
+    onVehicle(v) {
+      if (el.fuelType.value !== v.fuel) {
+        el.fuelType.value = v.fuel;
+        onFuelTypeChange();
+      }
+    },
+    onClear() {},
+  };
+  const compareCar = {
+    year: $("c2-year"), make: $("c2-make"), model: $("c2-model"), trim: $("c2-trim"),
+    trimField: $("c2-trim-field"), info: $("c2-vehicle-info"),
+    vehicle: null,
+    onVehicle(v) {
+      el.c2Fuel.value = v.fuel;
+      onCompareFuelChange();
+    },
+    onClear() { renderCompare(); },
   };
 
   const FUEL_LABELS = {
@@ -204,6 +236,7 @@
     state.unitsChosen = false;
     setUnits(unitsFor(code));
     if (state.priceEdited && !state.restoring) state.currency = currencyFor(code);
+    if (!state.restoring) compare.priceTyped = false;
     const from = state.places.from;
     if (from && (from.country || "").toUpperCase() !== code) state.stations = null;
     applyAutoPrice();
@@ -215,6 +248,7 @@
   function setUnits(units) {
     if (units === state.units) return;
     const manual = readManualEconomy();
+    const manual2 = readManualEconomy(el.c2Manual, el.c2Fuel.value);
     state.units = units;
     for (const r of el.unitRadios) r.checked = r.value === units;
     const unit = fuelUnit();
@@ -223,38 +257,47 @@
     }
     state.priceUnit = unit;
     if (manual) writeManualEconomy(manual);
+    if (manual2) writeManualEconomy(manual2, el.c2Manual);
     updateUnitLabels();
-    if (state.vehicle) renderVehicleInfo();
+    for (const car of [mainCar, compareCar]) if (car.vehicle) renderVehicleInfo(car);
     if (state.lastTrip) renderResults();
     renderPriceCard();
   }
 
-  function updateUnitLabels() {
-    const fuel = el.fuelType.value;
-    const unitWord = { gal: "gallon", L: "litre", kWh: "kWh" }[fuelUnit(fuel)];
-    el.priceUnit.textContent = `(${state.currency === "USD" ? "$" : state.currency} per ${unitWord})`;
+  const priceUnitText = (fuel) =>
+    `(${state.currency === "USD" ? "$" : state.currency} per ${{ gal: "gallon", L: "litre", kWh: "kWh" }[fuelUnit(fuel)]})`;
+
+  // Label and example for a "fuel economy" box, in the units shown.
+  function setManualLabel(label, input, fuel) {
     const ev = fuel === "electric";
-    const [label, example] = metric()
+    const [text, example] = metric()
       ? (ev ? ["Energy use (kWh/100 km)", "e.g. 17"] : ["Fuel consumption (L/100 km)", "e.g. 8.5"])
       : (ev ? ["Efficiency (MPGe)", "e.g. 120"] : ["Combined MPG", "e.g. 28"]);
-    el.manualLabel.textContent = label;
-    el.manualMpg.placeholder = example;
+    label.textContent = text;
+    input.placeholder = example;
   }
 
-  // Manual economy in the units shown → { mpg } or { kwhPer100mi }.
-  function readManualEconomy() {
-    const x = parseFloat(el.manualMpg.value);
+  function updateUnitLabels() {
+    el.priceUnit.textContent = priceUnitText(el.fuelType.value);
+    setManualLabel(el.manualLabel, el.manualMpg, el.fuelType.value);
+    el.c2PriceUnit.textContent = priceUnitText(el.c2Fuel.value);
+    setManualLabel(el.c2ManualLabel, el.c2Manual, el.c2Fuel.value);
+  }
+
+  // A typed-in fuel economy in the units shown → { mpg } or { kwhPer100mi }.
+  function readManualEconomy(input = el.manualMpg, fuel = el.fuelType.value) {
+    const x = parseFloat(input.value);
     if (!(x > 0)) return null;
-    const ev = el.fuelType.value === "electric";
+    const ev = fuel === "electric";
     if (metric()) return ev ? { kwhPer100mi: x * KM_PER_MILE } : { mpg: MPG_TO_L100KM / x };
     return ev ? { kwhPer100mi: (100 * KWH_PER_GALLON_EQUIV) / x } : { mpg: x };
   }
 
-  function writeManualEconomy(e) {
+  function writeManualEconomy(e, input = el.manualMpg) {
     let x;
     if (e.kwhPer100mi) x = metric() ? e.kwhPer100mi / KM_PER_MILE : (100 * KWH_PER_GALLON_EQUIV) / e.kwhPer100mi;
     else x = metric() ? MPG_TO_L100KM / e.mpg : e.mpg;
-    el.manualMpg.value = Math.round(x * 10) / 10;
+    input.value = Math.round(x * 10) / 10;
   }
 
   // ---------- fuel prices ----------
@@ -568,13 +611,15 @@
       state.vehicleSource = "fallback";
       years = fallbackYears();
     }
+    state.years = years;
     setOptions(el.year, years, "Year");
+    setOptions(compareCar.year, years, "Year");
   }
 
-  async function loadMakes(year) {
-    resetSelect(el.make, "Loading…");
-    resetSelect(el.model, "Select make");
-    clearVehicle();
+  async function loadMakes(car, year) {
+    resetSelect(car.make, "Loading…");
+    resetSelect(car.model, "Select make");
+    clearVehicle(car);
     let makes;
     if (state.vehicleSource === "api") {
       try {
@@ -587,13 +632,13 @@
     if (state.vehicleSource === "fallback") {
       makes = Object.keys(window.FALLBACK_VEHICLES).map((m) => ({ text: m, value: m }));
     }
-    setOptions(el.make, makes, "Make");
-    el.make.disabled = false;
+    setOptions(car.make, makes, "Make");
+    car.make.disabled = false;
   }
 
-  async function loadModels(year, make) {
-    resetSelect(el.model, "Loading…");
-    clearVehicle();
+  async function loadModels(car, year, make) {
+    resetSelect(car.model, "Loading…");
+    clearVehicle(car);
     let models;
     if (state.vehicleSource === "api") {
       try {
@@ -608,39 +653,39 @@
       const byModel = window.FALLBACK_VEHICLES[make] || {};
       models = Object.keys(byModel).map((m) => ({ text: m, value: m }));
     }
-    setOptions(el.model, models, "Model");
-    el.model.disabled = false;
+    setOptions(car.model, models, "Model");
+    car.model.disabled = false;
   }
 
-  async function loadTrims(year, make, model) {
-    clearVehicle();
+  async function loadTrims(car, year, make, model) {
+    clearVehicle(car);
     if (state.vehicleSource === "fallback") {
       const v = (window.FALLBACK_VEHICLES[make] || {})[model];
-      if (v) setVehicle({ label: `${year} ${make} ${model}`, mpg: v.mpg, kwhPer100: v.kwh, fuel: v.fuel, approx: true });
+      if (v) setVehicle(car, { label: `${year} ${make} ${model}`, mpg: v.mpg, kwhPer100: v.kwh, fuel: v.fuel, approx: true });
       return;
     }
     try {
       const trims = menuItems(await fetchJSON(
         `${FE_API}/vehicle/menu/options?year=${encodeURIComponent(year)}&make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}`));
       if (!trims.length) throw new Error("No trims");
-      setOptions(el.trim, trims);
-      el.trimField.hidden = trims.length < 2;
-      await loadVehicle(el.trim.value);
+      setOptions(car.trim, trims);
+      car.trimField.hidden = trims.length < 2;
+      await loadVehicle(car, car.trim.value);
     } catch (err) {
       console.warn(err);
-      el.vehicleInfo.hidden = false;
-      el.vehicleInfo.textContent = "Couldn't load fuel economy for this car. Enter it manually below.";
+      car.info.hidden = false;
+      car.info.textContent = "Couldn't load fuel economy for this car. Enter it manually below.";
     }
   }
 
-  async function loadVehicle(id) {
+  async function loadVehicle(car, id) {
     if (!id) return;
-    el.vehicleInfo.hidden = false;
-    el.vehicleInfo.textContent = "Looking up fuel economy…";
+    car.info.hidden = false;
+    car.info.textContent = "Looking up fuel economy…";
     try {
       const v = await fetchJSON(`${FE_API}/vehicle/${encodeURIComponent(id)}`);
       const fuel = mapFuelType(v.fuelType1);
-      setVehicle({
+      setVehicle(car, {
         id,
         label: `${v.year} ${v.make} ${v.model}`,
         mpg: parseFloat(v.comb08) || null,
@@ -649,8 +694,9 @@
       });
     } catch (err) {
       console.warn(err);
-      state.vehicle = null;
-      el.vehicleInfo.textContent = "Couldn't load fuel economy for this car. Enter it manually below.";
+      car.vehicle = null;
+      car.info.textContent = "Couldn't load fuel economy for this car. Enter it manually below.";
+      car.onClear();
     }
   }
 
@@ -674,30 +720,29 @@
       : `${num(v.mpg, 0)} MPG combined`;
   }
 
-  function renderVehicleInfo() {
-    const v = state.vehicle;
-    el.vehicleInfo.hidden = false;
-    el.vehicleInfo.innerHTML = "";
+  function renderVehicleInfo(car) {
+    const v = car.vehicle;
+    car.info.hidden = false;
+    car.info.innerHTML = "";
     const strong = document.createElement("strong");
     strong.textContent = v.label;
-    el.vehicleInfo.append("🚗 ", strong, ` — ${economyText(v)} · ${FUEL_LABELS[v.fuel].toLowerCase()} fuel`,
+    car.info.append("🚗 ", strong, ` — ${economyText(v)} · ${FUEL_LABELS[v.fuel].toLowerCase()} fuel`,
       v.approx ? " (approximate)" : "");
   }
 
-  function setVehicle(v) {
-    state.vehicle = v;
-    renderVehicleInfo();
-    if (el.fuelType.value !== v.fuel) {
-      el.fuelType.value = v.fuel;
-      onFuelTypeChange();
-    }
+  function setVehicle(car, v) {
+    car.vehicle = v;
+    renderVehicleInfo(car);
+    car.onVehicle(v);
   }
 
-  function clearVehicle() {
-    state.vehicle = null;
-    el.vehicleInfo.hidden = true;
-    el.trimField.hidden = true;
-    el.trim.innerHTML = "";
+  function clearVehicle(car) {
+    const had = !!car.vehicle;
+    car.vehicle = null;
+    car.info.hidden = true;
+    car.trimField.hidden = true;
+    car.trim.innerHTML = "";
+    if (had) car.onClear();
   }
 
   function resetSelect(select, placeholder) {
@@ -782,7 +827,8 @@
         const id = ++requestId;
         try {
           const found = await geocode(q);
-          if (id !== requestId) return;
+          // Ignore answers that arrive after the visitor has moved on.
+          if (id !== requestId || document.activeElement !== input) return;
           results = found;
           active = -1;
           render();
@@ -911,15 +957,40 @@
 
   // ---------- calculation ----------
 
-  // Returns { mpg } or { kwhPer100mi }, plus `manual` when typed in by the user.
-  function getEconomy() {
-    const manual = readManualEconomy();
+  // A car's fuel economy: { mpg } or { kwhPer100mi }, plus `manual` when the
+  // visitor typed it in (a typed value wins over the looked-up car).
+  function economyFor(car, manualInput, fuel) {
+    const manual = readManualEconomy(manualInput, fuel);
     if (manual) return { ...manual, manual: true };
-    const v = state.vehicle;
+    const v = car.vehicle;
     if (!v) return null;
-    if (el.fuelType.value === "electric") return v.kwhPer100 ? { kwhPer100mi: v.kwhPer100 } : null;
+    if (fuel === "electric") return v.kwhPer100 ? { kwhPer100mi: v.kwhPer100 } : null;
     return v.mpg ? { mpg: v.mpg } : null;
   }
+
+  const getEconomy = () => economyFor(mainCar, el.manualMpg, el.fuelType.value);
+
+  // Fuel (gallons) or energy (kWh) used over a distance, and what it costs.
+  // Everything is in miles and gallons/kWh internally; pricePerUnit is per
+  // gallon, or per kWh for an electric car.
+  function fuelCost(miles, economy, isEV, pricePerUnit) {
+    const used = isEV ? (miles * economy.kwhPer100mi) / 100 : miles / economy.mpg;
+    return { used, cost: used * pricePerUnit };
+  }
+
+  // Display text shared by the trip estimate and the comparison.
+  function economyDisplay(economy, isEV) {
+    const m = metric();
+    const text = isEV
+      ? (m ? `${num(economy.kwhPer100mi / KM_PER_MILE, 1)} kWh/100 km` : `${num(economy.kwhPer100mi, 0)} kWh/100 mi`)
+      : (m ? `${num(MPG_TO_L100KM / economy.mpg, 1)} L/100 km` : `${num(economy.mpg, economy.mpg % 1 ? 1 : 0)} MPG`);
+    return economy.manual ? `${text} (manual)` : text;
+  }
+  const usedDisplay = (used, isEV) =>
+    isEV ? `${num(used, 1)} kWh` : metric() ? `${num(used * LITRES_PER_GALLON, 1)} L` : `${num(used, 1)} gal`;
+  const priceDisplay = (pricePerUnit, isEV, currency) =>
+    isEV ? formatPrice(pricePerUnit, "kWh", currency)
+      : metric() ? formatPrice(convertPrice(pricePerUnit, "gal", "L"), "L", currency) : formatPrice(pricePerUnit, "gal", currency);
 
   async function calculate(e) {
     if (e) e.preventDefault();
@@ -927,7 +998,7 @@
 
     const economy = getEconomy();
     if (!economy) {
-      showError(el.fuelType.value === "electric" && state.vehicle
+      showError(el.fuelType.value === "electric" && mainCar.vehicle
         ? "This vehicle has no electric rating. Choose its fuel type or enter its fuel economy manually."
         : "Please select your car (year, make and model) or enter its fuel economy manually.");
       return;
@@ -948,23 +1019,25 @@
       const route = await getRoute(a, b);
       const trips = el.roundTrip.checked ? 2 : 1;
       const miles = route.miles * trips;
-      const isEV = el.fuelType.value === "electric";
+      const fuel = el.fuelType.value;
+      const isEV = fuel === "electric";
       // Work in miles and gallons (or kWh) internally; convert only for display.
       const pricePerUnit = isEV ? price : convertPrice(price, state.priceUnit, "gal");
-      const used = isEV ? (miles * economy.kwhPer100mi) / 100 : miles / economy.mpg;
 
       state.lastTrip = {
-        a, b, trips, miles, isEV, economy, used, pricePerUnit,
+        a, b, trips, miles, fuel, isEV, economy, pricePerUnit,
+        ...fuelCost(miles, economy, isEV, pricePerUnit),
+        label: mainCar.vehicle ? mainCar.vehicle.label : "Your car",
+        priceTyped: state.priceEdited,
         seconds: route.seconds * trips,
         estimated: route.estimated,
-        cost: used * pricePerUnit,
         currency: state.currency,
         people: parseInt(el.people.value, 10),
       };
-      renderResults();
       el.results.hidden = false;
+      renderResults();
       drawMap(route, a, b);
-      history.replaceState(null, "", `?${shareParams().toString()}`);
+      updateShareUrl();
       if (window.matchMedia("(max-width: 860px)").matches) el.results.scrollIntoView({ behavior: "smooth" });
     } catch (err) {
       showError(err.message || "Something went wrong. Please try again.");
@@ -988,22 +1061,9 @@
     el.rDistance.textContent = m ? `${num(km, 0)} km` : `${num(t.miles, 0)} mi`;
     el.rTime.textContent = formatDuration(t.seconds);
 
-    if (t.isEV) {
-      el.rFuel.textContent = `${num(t.used, 1)} kWh`;
-      el.rMpg.textContent = m
-        ? `${num(t.economy.kwhPer100mi / KM_PER_MILE, 1)} kWh/100 km`
-        : `${num(t.economy.kwhPer100mi, 0)} kWh/100 mi`;
-      el.rPrice.textContent = formatPrice(t.pricePerUnit, "kWh", cur);
-    } else {
-      el.rFuel.textContent = m ? `${num(t.used * LITRES_PER_GALLON, 1)} L` : `${num(t.used, 1)} gal`;
-      el.rMpg.textContent = m
-        ? `${num(MPG_TO_L100KM / t.economy.mpg, 1)} L/100 km`
-        : `${num(t.economy.mpg, t.economy.mpg % 1 ? 1 : 0)} MPG`;
-      el.rPrice.textContent = m
-        ? formatPrice(convertPrice(t.pricePerUnit, "gal", "L"), "L", cur)
-        : formatPrice(t.pricePerUnit, "gal", cur);
-    }
-    if (t.economy.manual) el.rMpg.textContent += " (manual)";
+    el.rFuel.textContent = usedDisplay(t.used, t.isEV);
+    el.rMpg.textContent = economyDisplay(t.economy, t.isEV);
+    el.rPrice.textContent = priceDisplay(t.pricePerUnit, t.isEV, cur);
 
     const perDist = t.cost / (m ? km : t.miles);
     el.rCpmLabel.textContent = m ? "Est. cost per km" : "Est. cost per mile";
@@ -1013,9 +1073,212 @@
     el.routeNote.textContent = t.estimated
       ? "Driving directions were unavailable, so distance is estimated from a straight line (+25%)."
       : "";
+
+    el.compareBtn.hidden = !el.compare.hidden;
+    if (!el.compare.hidden) renderCompare();
+  }
+
+  // ---------- compare two cars ----------
+
+  // Car 2's price box. It shows car 2's own fuel price, except when both cars
+  // use the same fuel: then car 2 uses exactly car 1's price (even a price the
+  // visitor typed), and the box is locked to make that clear.
+  const compare = {
+    priceTyped: false, // the visitor typed car 2's price (only possible when its fuel differs from car 1's)
+    priceUnit: "gal",  // unit of the number in car 2's price box
+  };
+
+  function openCompare() {
+    if (!state.lastTrip) return;
+    el.compare.hidden = false;
+    el.compareBtn.hidden = true;
+    if (compareCar.year.options.length < 2) setOptions(compareCar.year, state.years, "Year"); // years load after page start
+    updateUnitLabels();
+    renderCompare();
+  }
+
+  function closeCompare() {
+    el.compare.hidden = true;
+    el.compareBtn.hidden = !state.lastTrip;
+    // Reset the second car so "Compare" starts fresh next time.
+    compareCar.year.value = "";
+    resetSelect(compareCar.make, "Select year");
+    resetSelect(compareCar.model, "Select make");
+    compareCar.vehicle = null;
+    compareCar.info.hidden = true;
+    compareCar.trimField.hidden = true;
+    compareCar.trim.innerHTML = "";
+    el.c2Manual.value = "";
+    el.c2ManualDetails.open = false;
+    el.c2Fuel.value = "regular";
+    compare.priceTyped = false;
+    el.compareResults.hidden = true;
+    showCompareError("");
+    updateShareUrl();
+  }
+
+  function showCompareError(msg) {
+    el.compareError.textContent = msg;
+    el.compareError.hidden = !msg;
+  }
+
+  function onCompareFuelChange() {
+    compare.priceTyped = false; // a new fuel type starts from that fuel's own price
+    updateUnitLabels();
+    renderCompare();
+  }
+
+  // Fills car 2's price box and returns its price per gallon (per kWh for an
+  // electric car), or null when there's no price to use.
+  function refreshComparePrice(t) {
+    const fuel = el.c2Fuel.value;
+    const isEV = fuel === "electric";
+    const unit = fuelUnit(fuel);
+    const box = el.c2Price;
+    box.disabled = false;
+
+    if (fuel === t.fuel) {
+      box.disabled = true;
+      box.value = convertPrice(t.pricePerUnit, "gal", unit).toFixed(unit === "gal" ? 2 : 3);
+      compare.priceUnit = unit;
+      el.c2PriceSource.textContent = t.priceTyped
+        ? "Same fuel as car 1, so it uses the price you typed for car 1."
+        : "Same fuel as car 1, so it uses the same price.";
+      return t.pricePerUnit;
+    }
+
+    if (compare.priceTyped) {
+      const typed = parseFloat(box.value);
+      if (!(typed > 0)) {
+        el.c2PriceSource.textContent = "Type the price for this car's fuel.";
+        return null;
+      }
+      if (compare.priceUnit !== unit) { // units were switched since it was typed
+        box.value = convertPrice(typed, compare.priceUnit, unit).toFixed(unit === "gal" ? 2 : 3);
+        compare.priceUnit = unit;
+      }
+      el.c2PriceSource.textContent = "Using the price you typed.";
+      return isEV ? parseFloat(box.value) : convertPrice(parseFloat(box.value), unit, "gal");
+    }
+
+    const auto = autoPrice(fuel);
+    compare.priceUnit = unit;
+    if (!auto) {
+      box.value = "";
+      const what = fuel === "e85" ? "an E85" : `a ${FUEL_LABELS[fuel].toLowerCase()}`;
+      el.c2PriceSource.textContent = `We don't have ${what} price here. Type the price for this car.`;
+      return null;
+    }
+    box.value = convertPrice(auto.value, auto.unit, unit).toFixed(unit === "gal" ? 2 : 3);
+    el.c2PriceSource.textContent = auto.note;
+    return isEV ? auto.value : convertPrice(auto.value, auto.unit, "gal");
+  }
+
+  // One car's column: name, total, per person and the details behind them.
+  function renderCarColumn(box, car, tag, cheaper, t) {
+    const cash = (n) => money(n, 2, t.currency);
+    box.classList.toggle("cheaper", cheaper);
+    box.innerHTML = "";
+    const head = document.createElement("div");
+    head.className = "car-tag";
+    const name = document.createElement("span");
+    name.textContent = tag;
+    head.append(name);
+    if (cheaper) {
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "Cheaper";
+      head.append(badge);
+    }
+    const title = document.createElement("h3");
+    title.textContent = car.label;
+    const total = document.createElement("div");
+    total.className = "cmp-total";
+    total.textContent = cash(car.cost);
+    const pp = document.createElement("div");
+    pp.className = "cmp-pp";
+    pp.textContent = t.people > 1 ? `About ${cash(car.cost / t.people)} per person` : "Estimated fuel cost";
+
+    const rows = [
+      ["Fuel economy", economyDisplay(car.economy, car.isEV)],
+      ["Fuel type", FUEL_LABELS[car.fuel]],
+      [car.isEV ? "Est. energy used" : "Est. fuel used", usedDisplay(car.used, car.isEV)],
+      [car.isEV ? "Electricity price" : "Fuel price", priceDisplay(car.pricePerUnit, car.isEV, t.currency)],
+    ];
+    const dl = document.createElement("dl");
+    for (const [label, value] of rows) {
+      const row = document.createElement("div");
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      row.append(dt, dd);
+      dl.append(row);
+    }
+    box.append(head, title, total, pp, dl);
+  }
+
+  // Works out car 2's cost for the trip already estimated (same distance,
+  // round trip and people) and shows both cars side by side.
+  function renderCompare() {
+    if (el.compare.hidden) return;
+    const t = state.lastTrip;
+    const hide = (msg) => {
+      el.compareResults.hidden = true;
+      showCompareError(msg || "");
+      updateShareUrl();
+    };
+    if (!t) return hide("Estimate your trip first, then compare another car.");
+
+    const fuel = el.c2Fuel.value;
+    const isEV = fuel === "electric";
+    const pricePerUnit = refreshComparePrice(t);
+    const economy = economyFor(compareCar, el.c2Manual, fuel);
+    if (!economy) {
+      if (compareCar.vehicle && isEV) return hide("This car has no electric rating. Choose its fuel type or enter its fuel economy manually.");
+      if (compareCar.vehicle) return hide("We don't have a fuel economy for this car with that fuel type. Enter it manually above.");
+      return hide(); // nothing chosen yet
+    }
+    if (!(pricePerUnit > 0)) return hide(`Enter a ${isEV ? "electricity" : "fuel"} price for this car to compare.`);
+    showCompareError("");
+
+    const car1 = { label: t.label, fuel: t.fuel, isEV: t.isEV, economy: t.economy, pricePerUnit: t.pricePerUnit, used: t.used, cost: t.cost };
+    const car2 = {
+      label: compareCar.vehicle ? compareCar.vehicle.label : "Second car",
+      fuel, isEV, economy, pricePerUnit,
+      ...fuelCost(t.miles, economy, isEV, pricePerUnit),
+    };
+    // Two identical names (e.g. the same model twice) would make the summary confusing.
+    const [name1, name2] = car1.label === car2.label ? ["Car 1", "Car 2"] : [car1.label, car2.label];
+
+    const diff = car1.cost - car2.cost;
+    const cash = (n) => money(n, 2, t.currency);
+    el.compareSummary.innerHTML = "";
+    if (Math.abs(diff) < 0.005) {
+      el.compareSummary.textContent = "Both cars cost the same for this trip.";
+    } else {
+      const [cheap, dear] = diff > 0 ? [name2, name1] : [name1, name2];
+      const saving = Math.abs(diff);
+      const pct = Math.round((saving / Math.max(car1.cost, car2.cost)) * 100);
+      el.compareSummary.append(`The ${cheap} costs ${cash(saving)} less for this trip.`);
+      const small = document.createElement("small");
+      small.textContent = `That's about ${pct}% less than the ${dear}`
+        + (t.people > 1 ? `, or ${cash(saving / t.people)} less per person.` : ".");
+      el.compareSummary.append(small);
+    }
+    const tie = Math.abs(diff) < 0.005;
+    renderCarColumn(el.cmpCar1, car1, "Car 1", !tie && diff < 0, t);
+    renderCarColumn(el.cmpCar2, car2, "Car 2", !tie && diff > 0, t);
+    el.compareResults.hidden = false;
+    updateShareUrl();
   }
 
   // ---------- shareable links ----------
+
+  // Keeps the address bar in sync so copying it shares the current estimate.
+  function updateShareUrl() {
+    if (state.lastTrip && !state.restoring) history.replaceState(null, "", `?${shareParams().toString()}`);
+  }
 
   function shareParams() {
     const p = new URLSearchParams();
@@ -1033,7 +1296,53 @@
     p.set("price", el.price.value);
     p.set("cur", state.currency);
     if (el.people.value !== "1") p.set("people", el.people.value);
+    // Second car, only while a comparison is shown. Links without these
+    // parameters open the single-car estimate exactly as before.
+    if (!el.compare.hidden && !el.compareResults.hidden) {
+      if (compareCar.year.value) p.set("c2year", compareCar.year.value);
+      if (compareCar.make.value) p.set("c2make", compareCar.make.value);
+      if (compareCar.model.value) p.set("c2model", compareCar.model.value);
+      if (compareCar.trim.value) p.set("c2trim", compareCar.trim.value);
+      if (el.c2Manual.value) p.set("c2mpg", el.c2Manual.value);
+      p.set("c2fuel", el.c2Fuel.value);
+      if (compare.priceTyped && el.c2Price.value) p.set("c2price", el.c2Price.value);
+    }
     return p;
+  }
+
+  // Selects year, make, model and trim in a car picker one step at a time,
+  // loading each list before choosing from it. Stops at the first value that
+  // isn't offered (e.g. an old link to a model FuelEconomy.gov no longer lists).
+  async function restoreCarPicker(car, year, make, model, trim) {
+    const pick = (select, value) => {
+      if (value && [...select.options].some((o) => o.value === value)) { select.value = value; return true; }
+      return false;
+    };
+    if (!pick(car.year, year)) return;
+    await loadMakes(car, car.year.value);
+    if (!pick(car.make, make)) return;
+    await loadModels(car, car.year.value, car.make.value);
+    if (!pick(car.model, model)) return;
+    await loadTrims(car, car.year.value, car.make.value, car.model.value);
+    if (pick(car.trim, trim) && (!car.vehicle || car.vehicle.id !== car.trim.value)) await loadVehicle(car, car.trim.value);
+  }
+
+  async function restoreCompare(p) {
+    openCompare();
+    await restoreCarPicker(compareCar, p.get("c2year"), p.get("c2make"), p.get("c2model"), p.get("c2trim"));
+    if (FUEL_LABELS[p.get("c2fuel")]) el.c2Fuel.value = p.get("c2fuel");
+    if (p.get("c2mpg")) {
+      el.c2Manual.value = p.get("c2mpg");
+      el.c2ManualDetails.open = true;
+    }
+    compare.priceTyped = false;
+    if (parseFloat(p.get("c2price")) > 0 && el.c2Fuel.value !== state.lastTrip.fuel) {
+      compare.priceTyped = true;
+      compare.priceUnit = fuelUnit(el.c2Fuel.value);
+      el.c2Price.value = p.get("c2price");
+    }
+    updateUnitLabels();
+    renderCompare();
   }
 
   async function restoreFromUrl() {
@@ -1051,20 +1360,7 @@
         state.unitsChosen = true;
       }
 
-      const pick = (select, value) => {
-        if (value && [...select.options].some((o) => o.value === value)) { select.value = value; return true; }
-        return false;
-      };
-      if (pick(el.year, p.get("year"))) {
-        await loadMakes(el.year.value);
-        if (pick(el.make, p.get("make"))) {
-          await loadModels(el.year.value, el.make.value);
-          if (pick(el.model, p.get("model"))) {
-            await loadTrims(el.year.value, el.make.value, el.model.value);
-            if (pick(el.trim, p.get("trim"))) await loadVehicle(el.trim.value);
-          }
-        }
-      }
+      await restoreCarPicker(mainCar, p.get("year"), p.get("make"), p.get("model"), p.get("trim"));
       if (p.get("fuel") && FUEL_LABELS[p.get("fuel")]) el.fuelType.value = p.get("fuel");
       if (p.get("mpg")) el.manualMpg.value = p.get("mpg");
       if (parseFloat(p.get("price")) > 0) {
@@ -1076,6 +1372,7 @@
       updateUnitLabels();
       if (getEconomy()) {
         await calculate();
+        if (p.get("c2fuel") && state.lastTrip) await restoreCompare(p);
       } else {
         // A route-only link (e.g. from a route page): fill in the trip, look up
         // the local price, and let the visitor choose their car.
@@ -1084,6 +1381,7 @@
       }
     } finally {
       state.restoring = false;
+      updateShareUrl();
     }
   }
 
@@ -1095,10 +1393,19 @@
     el.peopleWord.textContent = n === "1" ? "person" : "people";
   }
 
-  el.year.addEventListener("change", () => el.year.value ? loadMakes(el.year.value) : resetSelect(el.make, "Select year"));
-  el.make.addEventListener("change", () => el.make.value && loadModels(el.year.value, el.make.value));
-  el.model.addEventListener("change", () => el.model.value && loadTrims(el.year.value, el.make.value, el.model.value));
-  el.trim.addEventListener("change", () => loadVehicle(el.trim.value));
+  function wireCarPicker(car) {
+    car.year.addEventListener("change", () => {
+      if (car.year.value) return loadMakes(car, car.year.value);
+      resetSelect(car.make, "Select year");
+      resetSelect(car.model, "Select make");
+      clearVehicle(car);
+    });
+    car.make.addEventListener("change", () => car.make.value && loadModels(car, car.year.value, car.make.value));
+    car.model.addEventListener("change", () => car.model.value && loadTrims(car, car.year.value, car.make.value, car.model.value));
+    car.trim.addEventListener("change", () => loadVehicle(car, car.trim.value));
+  }
+  wireCarPicker(mainCar);
+  wireCarPicker(compareCar);
   el.fuelType.addEventListener("change", onFuelTypeChange);
   el.country.addEventListener("change", () => {
     setCountry(el.country.value);
@@ -1124,6 +1431,22 @@
     });
   }
   el.people.addEventListener("input", updatePeople);
+
+  el.compareBtn.addEventListener("click", () => {
+    openCompare();
+    compareCar.year.focus();
+  });
+  el.compareRemove.addEventListener("click", () => {
+    closeCompare();
+    el.compareBtn.focus();
+  });
+  el.c2Fuel.addEventListener("change", onCompareFuelChange);
+  el.c2Manual.addEventListener("input", renderCompare);
+  el.c2Price.addEventListener("input", () => {
+    compare.priceTyped = true;
+    compare.priceUnit = fuelUnit(el.c2Fuel.value);
+    renderCompare();
+  });
   el.form.addEventListener("submit", calculate);
   el.shareBtn.addEventListener("click", async () => {
     const url = `${location.origin}${location.pathname}?${shareParams().toString()}`;

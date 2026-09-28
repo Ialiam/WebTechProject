@@ -158,7 +158,74 @@
           <p id="route-note" class="hint" hidden></p>
           <p class="hint disclaimer">This is an estimate for planning your trip. Your actual cost can be higher or lower depending on your speed, traffic, weather, cargo, your car's condition and the price you pay at the pump.</p>
           <div id="map" class="map"></div>
+          <button type="button" class="btn btn-ghost" id="compare-btn">Compare with another car</button>
           <button type="button" class="btn btn-ghost" id="share-btn">Copy shareable link</button>
+        </section>
+
+        <!-- Second-car comparison: shown after "Compare with another car". -->
+        <section id="compare" class="card compare" aria-labelledby="compare-title" hidden>
+          <div class="compare-head">
+            <h2 id="compare-title">Compare with another car</h2>
+            <button type="button" class="link-btn" id="compare-remove">Remove</button>
+          </div>
+          <p class="hint">Same route, round trip and number of people as your estimate.</p>
+
+          <div class="compare-picker">
+            <div class="grid-3">
+              <div class="field">
+                <label for="c2-year">Year</label>
+                <select id="c2-year"><option value="">Year</option></select>
+              </div>
+              <div class="field">
+                <label for="c2-make">Make</label>
+                <select id="c2-make" disabled><option value="">Select year</option></select>
+              </div>
+              <div class="field">
+                <label for="c2-model">Model</label>
+                <select id="c2-model" disabled><option value="">Select make</option></select>
+              </div>
+            </div>
+            <div class="field" id="c2-trim-field" hidden>
+              <label for="c2-trim">Engine / trim</label>
+              <select id="c2-trim"></select>
+            </div>
+            <p id="c2-vehicle-info" class="vehicle-info" hidden></p>
+            <details class="manual" id="c2-manual">
+              <summary>Can't find this car? Enter its fuel economy manually</summary>
+              <div class="field">
+                <label for="c2-manual-mpg" id="c2-manual-label">Combined MPG</label>
+                <input id="c2-manual-mpg" type="number" min="0.1" max="300" step="0.1" placeholder="e.g. 28" />
+              </div>
+            </details>
+            <div class="grid-2">
+              <div class="field">
+                <label for="c2-fuel-type">Fuel type</label>
+                <select id="c2-fuel-type">
+                  <option value="regular">Regular gasoline</option>
+                  <option value="midgrade">Midgrade gasoline</option>
+                  <option value="premium">Premium gasoline</option>
+                  <option value="diesel">Diesel</option>
+                  <option value="e85">E85</option>
+                  <option value="electric">Electricity</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="c2-price">Price <span id="c2-price-unit">($ per gallon)</span></label>
+                <input id="c2-price" type="number" min="0" step="0.001" />
+                <small id="c2-price-source" class="hint"></small>
+              </div>
+            </div>
+            <p id="compare-error" class="error" role="alert" hidden></p>
+          </div>
+
+          <div id="compare-results" aria-live="polite" hidden>
+            <p class="compare-summary" id="compare-summary"></p>
+            <div class="compare-grid">
+              <div class="compare-col" id="cmp-car1"></div>
+              <div class="compare-col" id="cmp-car2"></div>
+            </div>
+            <p class="hint">Both costs are estimates for planning. Real fuel use depends on how and where you drive.</p>
+          </div>
         </section>
 
         <section class="card prices">
