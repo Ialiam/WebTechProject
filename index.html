@@ -130,6 +130,26 @@
             </div>
           </div>
           <div class="field">
+            <label for="conditions">Driving conditions</label>
+            <select id="conditions">
+              <option value="normal">Normal</option>
+              <option value="cool">Cool (about 0 °C to −5 °C)</option>
+              <option value="cold">Cold (about −5 °C to −15 °C)</option>
+              <option value="verycold">Very cold (below −15 °C)</option>
+            </select>
+            <details class="why-winter">
+              <summary>Why does cold weather use more fuel?</summary>
+              <p>In the cold, your engine takes longer to warm up, winter tires and snow make the car work harder, and the heater and defroster use energy. Hybrids and electric cars are affected the most, because heating the cabin takes energy their motors would otherwise use. <a href="#faq-winter">Tips to use less fuel in winter</a></p>
+            </details>
+          </div>
+          <div class="winter-tip" id="winter-tip" role="note" hidden>
+            <p>❄️ It's winter. Turn on winter mode for a more realistic estimate?</p>
+            <div class="winter-tip-actions">
+              <button type="button" class="btn btn-small" id="winter-tip-on">Use cold conditions</button>
+              <button type="button" class="link-btn" id="winter-tip-dismiss">No thanks</button>
+            </div>
+          </div>
+          <div class="field">
             <label for="people">Split cost between <output id="people-out">1</output> <span id="people-word">person</span></label>
             <input id="people" type="range" min="1" max="8" value="1" />
           </div>
@@ -148,6 +168,7 @@
             <span class="value" id="total-cost">$0.00</span>
             <span class="sub" id="per-person"></span>
           </div>
+          <p class="winter-note" id="winter-note" hidden></p>
           <dl class="stats">
             <div><dt>Distance</dt><dd id="r-distance">–</dd></div>
             <div><dt>Est. drive time</dt><dd id="r-time">–</dd></div>
@@ -268,6 +289,13 @@
       <details><summary>Where do fuel prices come from?</summary><p>Where available, we use today's posted prices at gas stations near your starting point. Otherwise we use national averages (for the US, from the Energy Information Administration via FuelEconomy.gov, updated weekly). Type in what your station charges for the most precise number.</p></details>
       <details><summary>Does it work in Canada and other countries?</summary><p>Yes. Choose your country at the top of the form. In the United States we show miles, gallons, MPG and US dollars. In Canada and most other countries we show kilometres, litres, L/100 km and the local currency. You can still switch units yourself.</p></details>
       <details><summary>Can I compare two cars?</summary><p>Yes. Tap "Compare with another car" under your car, or below your estimate, and pick a second car. You'll see both costs side by side for the same trip, each using the price of its own fuel (for example premium, diesel or electricity), and how much you'd save with the cheaper one.</p></details>
+      <details id="faq-winter"><summary>How does winter affect fuel cost?</summary><p>Cold weather makes every car use more fuel. The engine takes longer to warm up, cold air and snow add resistance, winter tires roll less easily, and the heater and defroster use energy. According to FuelEconomy.gov, a gas car's fuel economy in city driving can be about 15% lower at −7 °C, hybrids about 30% lower, and electric cars can lose even more when the heater is on. Choose your "Driving conditions" to include this in your estimate.</p>
+        <ul>
+          <li><strong>Skip the long warm-up.</strong> Idle for no more than about 30 seconds, then drive gently. The engine warms up faster while driving.</li>
+          <li><strong>Check tire pressure often.</strong> It drops as temperatures fall, and under-inflated tires use more fuel.</li>
+          <li><strong>Clear snow and ice</strong> from the roof, hood and windows before you go. It adds weight and drag.</li>
+          <li><strong>Use a block heater</strong> where available, on a timer about 2 hours before you leave. Natural Resources Canada says it can improve fuel economy by up to 10% at −20 °C.</li>
+        </ul></details>
       <details><summary>Does it work for electric cars?</summary><p>Yes. For EVs we use the EPA kWh-per-100-miles rating and the average residential electricity price.</p></details>
       <details><summary>Is it free?</summary><p>Yes, completely free. No sign-up required.</p></details>
     </section>
