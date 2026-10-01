@@ -64,6 +64,9 @@
     c2Fuel: $("c2-fuel-type"), c2Price: $("c2-price"), c2PriceUnit: $("c2-price-unit"), c2PriceSource: $("c2-price-source"),
     compareError: $("compare-error"), compareResults: $("compare-results"), compareSummary: $("compare-summary"),
     cmpCar1: $("cmp-car1"), cmpCar2: $("cmp-car2"),
+    // Winter mode
+    conditions: $("conditions"), winterNote: $("winter-note"),
+    winterTip: $("winter-tip"), winterTipOn: $("winter-tip-on"), winterTipDismiss: $("winter-tip-dismiss"),
   };
 
   const state = {
@@ -112,6 +115,57 @@
     },
     onClear() { renderCompare(); },
   };
+
+  // ---------- driving conditions (winter mode) ----------
+  //
+  // Extra fuel or energy USE in cold weather, as a fraction of normal use
+  // (0.12 = 12% more). Change these numbers to tune winter mode.
+  //
+  // Sources (official figures are mostly for city driving and short trips;
+  // road trips are mostly highway with a warm engine, so the values below are
+  // deliberately lower):
+  //  - FuelEconomy.gov, "Fuel Economy in Cold Weather"
+  //    (https://www.fueleconomy.gov/feg/coldweather.shtml): at -7 °C (20 °F)
+  //    vs 25 °C, city fuel economy is about 15% lower for gas cars (24% on
+  //    short trips), 30-34% lower for hybrids, and about 39% lower for EVs
+  //    with the cabin heater on (8% lower without it). 15% lower economy
+  //    means about 18% more fuel used.
+  //  - Natural Resources Canada, "Factors that affect fuel efficiency"
+  //    (https://natural-resources.canada.ca/energy-efficiency/transportation-energy-efficiency/personal-vehicles/factors-affect-fuel-efficiency)
+  //    and Auto$mart "Cold weather effects on fuel efficiency": a gas car uses
+  //    about 15% more fuel at -7 °C than at 25 °C; 12-28% more in urban
+  //    commutes when it drops from 24 °C to 7 °C; poor winter roads add 7-35%;
+  //    denser cold air adds about 1.3% on the highway; winter gasoline has
+  //    1.5-3% less energy.
+  //  - CAA winter EV road test (2024-2025, -7 °C to -15 °C, real Canadian
+  //    driving): 14-39% less range than rated, i.e. about 16-64% more energy.
+  const DRIVING_CONDITIONS = {
+    normal: { label: "Normal", gas: 0, hybrid: 0, electric: 0 },
+    // 0 °C to -5 °C: milder than the -7 °C test point.
+    cool: { label: "Cool", gas: 0.08, hybrid: 0.12, electric: 0.15 },
+    // -5 °C to -15 °C: around the -7 °C test point, adjusted down for
+    // highway driving. EV +30% ≈ 23% less range, inside CAA's 14-39%.
+    cold: { label: "Cold", gas: 0.12, hybrid: 0.20, electric: 0.30 },
+    // Below -15 °C: gas +18% matches the official -7 °C city figure; colder
+    // air, snow and longer warm-ups make this conservative for deep cold.
+    verycold: { label: "Very cold", gas: 0.18, hybrid: 0.30, electric: 0.45 },
+  };
+  const CONDITION_RANGES = {
+    metric: { cool: "about 0 °C to −5 °C", cold: "about −5 °C to −15 °C", verycold: "below −15 °C" },
+    imperial: { cool: "about 32 °F to 23 °F", cold: "about 23 °F to 5 °F", verycold: "below 5 °F" },
+  };
+
+  // How cold affects a car depends on its type: "gas" (incl. diesel),
+  // "hybrid" (incl. plug-in hybrids running on gas) or "electric".
+  // A typed-in fuel economy without a chosen car counts as gas, or electric
+  // when the fuel type is electricity.
+  function vehicleKind(vehicle, fuel) {
+    if (fuel === "electric") return "electric";
+    return vehicle && vehicle.hybrid ? "hybrid" : "gas";
+  }
+
+  // Extra use for the chosen driving conditions, e.g. 0.12 for +12%.
+  const winterExtra = (kind) => (DRIVING_CONDITIONS[el.conditions.value] || DRIVING_CONDITIONS.normal)[kind];
 
   const FUEL_LABELS = {
     regular: "Regular", midgrade: "Midgrade", premium: "Premium",
@@ -275,6 +329,7 @@
     setUnits(unitsFor(code));
     if (state.priceEdited && !state.restoring) state.currency = currencyFor(code);
     if (!state.restoring) compare.priceTyped = false;
+    updateWinterTip();
     const from = state.places.from;
     if (from && (from.country || "").toUpperCase() !== code) state.stations = null;
     applyAutoPrice();
@@ -316,6 +371,10 @@
   }
 
   function updateUnitLabels() {
+    const ranges = CONDITION_RANGES[state.units];
+    for (const opt of el.conditions.options) {
+      if (ranges[opt.value]) opt.textContent = `${DRIVING_CONDITIONS[opt.value].label} (${ranges[opt.value]})`;
+    }
     el.priceUnit.textContent = priceUnitText(el.fuelType.value);
     setManualLabel(el.manualLabel, el.manualMpg, el.fuelType.value);
     el.c2PriceUnit.textContent = priceUnitText(el.c2Fuel.value);
@@ -699,7 +758,7 @@
     clearVehicle(car);
     if (state.vehicleSource === "fallback") {
       const v = (window.FALLBACK_VEHICLES[make] || {})[model];
-      if (v) setVehicle(car, { label: `${year} ${make} ${model}`, mpg: v.mpg, kwhPer100: v.kwh, fuel: v.fuel, approx: true });
+      if (v) setVehicle(car, { label: `${year} ${make} ${model}`, mpg: v.mpg, kwhPer100: v.kwh, fuel: v.fuel, hybrid: !!v.hybrid, approx: true });
       return;
     }
     try {
@@ -729,6 +788,9 @@
         mpg: parseFloat(v.comb08) || null,
         kwhPer100: fuel === "electric" ? parseFloat(v.combE) || null : null,
         fuel,
+        // FuelEconomy.gov marks hybrids in atvType ("Hybrid", "Plug-in Hybrid")
+        // and in the engine description ("HEV", "PHEV").
+        hybrid: /hybrid/i.test(v.atvType || "") || /\bP?HEV\b/.test(v.eng_dscr || ""),
       });
     } catch (err) {
       console.warn(err);
@@ -1010,10 +1072,18 @@
 
   // Fuel (gallons) or energy (kWh) used over a distance, and what it costs.
   // Everything is in miles and gallons/kWh internally; pricePerUnit is per
-  // gallon, or per kWh for an electric car.
-  function fuelCost(miles, economy, isEV, pricePerUnit) {
-    const used = isEV ? (miles * economy.kwhPer100mi) / 100 : miles / economy.mpg;
-    return { used, cost: used * pricePerUnit };
+  // gallon, or per kWh for an electric car. `extra` is the winter increase in
+  // use (0.12 = +12%); with 0 the result is exactly the normal estimate.
+  function fuelCost(miles, economy, isEV, pricePerUnit, extra = 0) {
+    const baseUsed = isEV ? (miles * economy.kwhPer100mi) / 100 : miles / economy.mpg;
+    const used = baseUsed * (1 + extra);
+    return { used, cost: used * pricePerUnit, extra, baseCost: baseUsed * pricePerUnit };
+  }
+
+  // Text for the winter adjustment, e.g. "+12% fuel use (+$8.57)", or "".
+  function winterText(car, currency) {
+    if (!car.extra) return "";
+    return `+${Math.round(car.extra * 100)}% ${car.isEV ? "energy" : "fuel"} use (+${money(car.cost - car.baseCost, 2, currency)})`;
   }
 
   // Display text shared by the trip estimate and the comparison.
@@ -1062,9 +1132,10 @@
       // Work in miles and gallons (or kWh) internally; convert only for display.
       const pricePerUnit = isEV ? price : convertPrice(price, state.priceUnit, "gal");
 
+      const kind = vehicleKind(mainCar.vehicle, fuel);
       state.lastTrip = {
-        a, b, trips, miles, fuel, isEV, economy, pricePerUnit,
-        ...fuelCost(miles, economy, isEV, pricePerUnit),
+        a, b, trips, miles, fuel, isEV, economy, pricePerUnit, kind,
+        ...fuelCost(miles, economy, isEV, pricePerUnit, winterExtra(kind)),
         label: mainCar.vehicle ? mainCar.vehicle.label : "Your car",
         priceTyped: state.priceEdited,
         seconds: route.seconds * trips,
@@ -1096,6 +1167,14 @@
     el.totalLabel.textContent = cur === "USD" ? "Estimated fuel cost" : `Estimated fuel cost (${cur})`;
     el.totalCost.textContent = cash(t.cost);
     el.perPerson.textContent = t.people > 1 ? `About ${cash(t.cost / t.people)} per person (${t.people} people)` : "";
+    el.winterNote.hidden = !t.extra;
+    if (t.extra) {
+      const cond = DRIVING_CONDITIONS[el.conditions.value];
+      el.winterNote.innerHTML = "";
+      const strong = document.createElement("strong");
+      strong.textContent = `${cond.label} weather: ${winterText(t, cur)}`;
+      el.winterNote.append(strong, ` · Normal conditions: ${cash(t.baseCost)}`);
+    }
     el.rDistance.textContent = m ? `${num(km, 0)} km` : `${num(t.miles, 0)} mi`;
     el.rTime.textContent = formatDuration(t.seconds);
 
@@ -1114,6 +1193,34 @@
 
     el.compareBtn.hidden = !el.compare.hidden;
     if (!el.compare.hidden) renderCompare();
+  }
+
+  // ---------- winter mode ----------
+
+  // Re-prices the estimate (and comparison) for the chosen conditions without
+  // looking up the route again.
+  function onConditionsChange() {
+    const t = state.lastTrip;
+    if (t) {
+      Object.assign(t, fuelCost(t.miles, t.economy, t.isEV, t.pricePerUnit, winterExtra(t.kind)));
+      renderResults();
+      updateShareUrl();
+    }
+    updateWinterTip();
+  }
+
+  // "It's winter" suggestion: Canada, November to March, conditions still on
+  // Normal, and not dismissed this winter. It never switches winter mode on by itself.
+  const winterSeasonKey = () => {
+    const now = new Date();
+    return `tfc-winter-tip-dismissed-${now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1}`;
+  };
+  function updateWinterTip() {
+    const month = new Date().getMonth(); // 0 = January
+    const winter = month >= 10 || month <= 2;
+    let dismissed = false;
+    try { dismissed = localStorage.getItem(winterSeasonKey()) === "1"; } catch { /* storage unavailable */ }
+    el.winterTip.hidden = !(state.country === "CA" && winter && el.conditions.value === "normal" && !dismissed);
   }
 
   // ---------- compare two cars ----------
@@ -1243,6 +1350,7 @@
       [car.isEV ? "Est. energy used" : "Est. fuel used", usedDisplay(car.used, car.isEV)],
       [car.isEV ? "Electricity price" : "Fuel price", priceDisplay(car.pricePerUnit, car.isEV, t.currency)],
     ];
+    if (car.extra) rows.push(["Winter adjustment", winterText(car, t.currency)]);
     const dl = document.createElement("dl");
     for (const [label, value] of rows) {
       const row = document.createElement("div");
@@ -1280,11 +1388,13 @@
     if (!(pricePerUnit > 0)) return hide(`Enter a ${isEV ? "electricity" : "fuel"} price for this car to compare.`);
     showCompareError("");
 
-    const car1 = { label: t.label, fuel: t.fuel, isEV: t.isEV, economy: t.economy, pricePerUnit: t.pricePerUnit, used: t.used, cost: t.cost };
+    const car1 = { label: t.label, fuel: t.fuel, isEV: t.isEV, economy: t.economy, pricePerUnit: t.pricePerUnit,
+      used: t.used, cost: t.cost, extra: t.extra, baseCost: t.baseCost };
+    // Same driving conditions, but car 2's own percentage for its vehicle type.
     const car2 = {
       label: compareCar.vehicle ? compareCar.vehicle.label : "Second car",
       fuel, isEV, economy, pricePerUnit,
-      ...fuelCost(t.miles, economy, isEV, pricePerUnit),
+      ...fuelCost(t.miles, economy, isEV, pricePerUnit, winterExtra(vehicleKind(compareCar.vehicle, fuel))),
     };
     // Two identical names (e.g. the same model twice) would make the summary confusing.
     const [name1, name2] = car1.label === car2.label ? ["Car 1", "Car 2"] : [car1.label, car2.label];
@@ -1334,6 +1444,7 @@
     p.set("price", el.price.value);
     p.set("cur", state.currency);
     if (el.people.value !== "1") p.set("people", el.people.value);
+    if (el.conditions.value !== "normal") p.set("cond", el.conditions.value);
     // Second car, only while a comparison is shown. Links without these
     // parameters open the single-car estimate exactly as before.
     if (!el.compare.hidden && !el.compareResults.hidden) {
@@ -1392,6 +1503,8 @@
       el.to.value = p.get("to");
       el.roundTrip.checked = p.get("rt") === "1";
       if (p.get("people")) { el.people.value = p.get("people"); updatePeople(); }
+      // Links made before winter mode have no "cond" and stay on Normal.
+      if (DRIVING_CONDITIONS[p.get("cond")]) el.conditions.value = p.get("cond");
       if (p.get("country")) setCountry(p.get("country").toUpperCase());
       if (p.get("units") === "metric" || p.get("units") === "imperial") {
         setUnits(p.get("units"));
@@ -1470,6 +1583,21 @@
   }
   el.people.addEventListener("input", updatePeople);
 
+  el.conditions.addEventListener("change", onConditionsChange);
+  // "Tips to use less fuel in winter" jumps to the FAQ answer; open it too.
+  document.querySelectorAll('a[href="#faq-winter"]').forEach((a) => a.addEventListener("click", () => {
+    document.getElementById("faq-winter").open = true;
+  }));
+  el.winterTipOn.addEventListener("click", () => {
+    el.conditions.value = "cold";
+    onConditionsChange();
+    el.conditions.focus();
+  });
+  el.winterTipDismiss.addEventListener("click", () => {
+    try { localStorage.setItem(winterSeasonKey(), "1"); } catch { /* storage unavailable */ }
+    updateWinterTip();
+  });
+
   el.compareBtn.addEventListener("click", () => {
     openCompare();
     compareCar.year.focus();
@@ -1516,6 +1644,7 @@
   fillCountries();
   setUnits(unitsFor(state.country));
   updateUnitLabels();
+  updateWinterTip();
 
   Promise.all([loadUsPrices(), loadCityPrices(), loadYears()]).then(() => {
     applyAutoPrice();

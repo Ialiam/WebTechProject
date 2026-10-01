@@ -183,6 +183,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .compare > .hint { margin: 4px 0 14px; }
 .link-btn { background: none; border: 0; padding: 4px 0; font: inherit; font-size: .9rem; font-weight: 600; color: var(--accent); cursor: pointer; text-decoration: underline; }
 .link-btn:hover { color: var(--accent-strong); }
+/* ---------- winter driving ---------- */
+.why-winter { margin-top: 6px; }
+.why-winter summary { cursor: pointer; color: var(--accent); font-size: .88rem; }
+.why-winter p { font-size: .88rem; color: var(--muted); margin: 6px 0 0; }
+.winter-tip { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; }
+.winter-tip p { margin: 0 0 8px; font-size: .92rem; font-weight: 600; }
+.winter-tip-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn.btn-small { width: auto; padding: 8px 14px; font-size: .9rem; border-radius: 10px; }
+.winter-note { margin: -4px 0 14px; padding: 10px 12px; border-radius: 10px; border: 1px dashed var(--accent); font-size: .9rem; }
+.winter-note strong { color: var(--accent); }
+.content details ul { margin: 6px 0 0; padding-left: 20px; }
+.content details li { margin: 4px 0; }
 .compare-link { display: block; margin-top: 8px; font-size: .95rem; text-decoration: none; }
 .compare-link:hover { text-decoration: underline; }
 #compare-btn { margin-top: 12px; }

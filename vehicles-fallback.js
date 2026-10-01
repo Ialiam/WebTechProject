@@ -1,6 +1,7 @@
 // Offline backup list of popular US vehicles, used only when FuelEconomy.gov
 // can't be reached. Values are approximate EPA combined ratings for recent
-// model years: `mpg` for fuel cars, `kwh` (kWh per 100 miles) for EVs.
+// model years: `mpg` for fuel cars, `kwh` (kWh per 100 miles) for EVs, and
+// `hybrid: true` for hybrids (cold weather affects them more).
 window.FALLBACK_VEHICLES = {
   "BMW": { "3 Series": { mpg: 30, fuel: "premium" }, "X5": { mpg: 23, fuel: "premium" } },
   "Chevrolet": {
@@ -41,7 +42,7 @@ window.FALLBACK_VEHICLES = {
   },
   "Toyota": {
     "Camry": { mpg: 32, fuel: "regular" }, "Corolla": { mpg: 34, fuel: "regular" },
-    "Highlander": { mpg: 24, fuel: "regular" }, "Prius": { mpg: 52, fuel: "regular" },
+    "Highlander": { mpg: 24, fuel: "regular" }, "Prius": { mpg: 52, fuel: "regular", hybrid: true },
     "RAV4": { mpg: 30, fuel: "regular" }, "Sienna": { mpg: 36, fuel: "regular" },
     "Tacoma": { mpg: 21, fuel: "regular" }, "Tundra": { mpg: 19, fuel: "regular" }
   },
