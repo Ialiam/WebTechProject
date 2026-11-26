@@ -8,12 +8,12 @@
    "sourceUrl": "https://www2.nrcan.gc.ca/eneene/sources/pripri/prices_bycity_e.cfm",
    "national": {
     "name": "Canada",
-    "date": "2026-11-25",
+    "date": "2026-11-26",
     "prices": {
-     "regular": 1.47,
-     "midgrade": 1.681,
-     "premium": 1.768,
-     "diesel": 2.237
+     "regular": 1.487,
+     "midgrade": 1.7,
+     "premium": 1.785,
+     "diesel": 2.221
     }
    },
    "cities": [
@@ -22,12 +22,12 @@
      "region": "BC",
      "lat": 49.0504,
      "lon": -122.3045,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.649,
-      "midgrade": 1.819,
-      "premium": 1.91,
-      "diesel": 2.367
+      "regular": 1.615,
+      "midgrade": 1.796,
+      "premium": 1.879,
+      "diesel": 2.322
      }
     },
     {
@@ -35,12 +35,12 @@
      "region": "ON",
      "lat": 44.3894,
      "lon": -79.6903,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.448,
-      "midgrade": 1.651,
-      "premium": 1.755,
-      "diesel": 2.123
+      "regular": 1.464,
+      "midgrade": 1.666,
+      "premium": 1.771,
+      "diesel": 2.118
      }
     },
     {
@@ -48,12 +48,12 @@
      "region": "NB",
      "lat": 47.6186,
      "lon": -65.6509,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.564,
       "midgrade": 1.726,
       "premium": 1.879,
-      "diesel": 2.305
+      "diesel": 2.322
      }
     },
     {
@@ -61,12 +61,12 @@
      "region": "MB",
      "lat": 49.8485,
      "lon": -99.9501,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.336,
-      "midgrade": 1.492,
+      "regular": 1.357,
+      "midgrade": 1.522,
       "premium": 1.611,
-      "diesel": 2.202
+      "diesel": 2.192
      }
     },
     {
@@ -74,12 +74,12 @@
      "region": "ON",
      "lat": 43.1394,
      "lon": -80.2644,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.443,
-      "midgrade": 1.648,
-      "premium": 1.74,
-      "diesel": 2.091
+      "regular": 1.45,
+      "midgrade": 1.655,
+      "premium": 1.748,
+      "diesel": 2.085
      }
     },
     {
@@ -87,12 +87,12 @@
      "region": "AB",
      "lat": 51.0447,
      "lon": -114.0719,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.129,
-      "midgrade": 1.305,
-      "premium": 1.385,
-      "diesel": 1.955
+      "regular": 1.2,
+      "midgrade": 1.399,
+      "premium": 1.466,
+      "diesel": 1.948
      }
     },
     {
@@ -100,12 +100,12 @@
      "region": "NB",
      "lat": 48.0055,
      "lon": -66.6727,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.602,
-      "midgrade": 1.747,
-      "premium": 1.893,
-      "diesel": 2.321
+      "regular": 1.591,
+      "midgrade": 1.735,
+      "premium": 1.878,
+      "diesel": 2.301
      }
     },
     {
@@ -113,11 +113,11 @@
      "region": "PE",
      "lat": 46.2382,
      "lon": -63.1311,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.557,
-      "midgrade": 1.657,
-      "premium": 1.747,
+      "midgrade": 1.654,
+      "premium": 1.741,
       "diesel": 2.274
      }
     },
@@ -126,12 +126,12 @@
      "region": "QC",
      "lat": 48.428,
      "lon": -71.068,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.416,
-      "midgrade": 1.636,
-      "premium": 1.684,
-      "diesel": 2.646
+      "regular": 1.463,
+      "midgrade": 1.682,
+      "premium": 1.733,
+      "diesel": 2.635
      }
     },
     {
@@ -139,12 +139,12 @@
      "region": "NL",
      "lat": 48.95,
      "lon": -57.9522,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.653,
-      "midgrade": 1.683,
-      "premium": 1.713,
-      "diesel": 2.297
+      "regular": 1.669,
+      "midgrade": 1.699,
+      "premium": 1.729,
+      "diesel": 2.29
      }
     },
     {
@@ -152,11 +152,11 @@
      "region": "QC",
      "lat": 45.8838,
      "lon": -72.4843,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.543,
-      "midgrade": 1.767,
-      "premium": 1.815,
+      "regular": 1.521,
+      "midgrade": 1.744,
+      "premium": 1.792,
       "diesel": 2.589
      }
     },
@@ -165,12 +165,12 @@
      "region": "AB",
      "lat": 53.5461,
      "lon": -113.4938,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.056,
-      "midgrade": 1.236,
-      "premium": 1.328,
-      "diesel": 1.982
+      "regular": 1.23,
+      "midgrade": 1.408,
+      "premium": 1.502,
+      "diesel": 1.955
      }
     },
     {
@@ -178,12 +178,12 @@
      "region": "NB",
      "lat": 47.3737,
      "lon": -68.3251,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.566,
-      "midgrade": 1.744,
-      "premium": 1.912,
-      "diesel": 2.294
+      "regular": 1.564,
+      "midgrade": 1.741,
+      "premium": 1.909,
+      "diesel": 2.293
      }
     },
     {
@@ -191,12 +191,12 @@
      "region": "BC",
      "lat": 56.2524,
      "lon": -120.8466,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.515,
       "midgrade": 1.649,
       "premium": 1.769,
-      "diesel": 2.235
+      "diesel": 2.217
      }
     },
     {
@@ -204,12 +204,12 @@
      "region": "NB",
      "lat": 45.9636,
      "lon": -66.6431,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.572,
-      "midgrade": 1.734,
-      "premium": 1.899,
-      "diesel": 2.278
+      "regular": 1.57,
+      "midgrade": 1.732,
+      "premium": 1.896,
+      "diesel": 2.281
      }
     },
     {
@@ -217,12 +217,12 @@
      "region": "NL",
      "lat": 48.9569,
      "lon": -54.6089,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.681,
-      "midgrade": 1.711,
-      "premium": 1.741,
-      "diesel": 2.312
+      "regular": 1.696,
+      "midgrade": 1.726,
+      "premium": 1.756,
+      "diesel": 2.282
      }
     },
     {
@@ -230,11 +230,11 @@
      "region": "QC",
      "lat": 48.8316,
      "lon": -64.4869,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.675,
-      "midgrade": 1.879,
-      "premium": 1.929,
+      "regular": 1.667,
+      "midgrade": 1.871,
+      "premium": 1.921,
       "diesel": 2.619
      }
     },
@@ -243,12 +243,12 @@
      "region": "QC",
      "lat": 45.4765,
      "lon": -75.7013,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.412,
-      "midgrade": 1.635,
-      "premium": 1.683,
-      "diesel": 2.532
+      "regular": 1.454,
+      "midgrade": 1.675,
+      "premium": 1.724,
+      "diesel": 2.499
      }
     },
     {
@@ -256,12 +256,12 @@
      "region": "AB",
      "lat": 55.1707,
      "lon": -118.7947,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.363,
-      "midgrade": 1.534,
-      "premium": 1.625,
-      "diesel": 1.913
+      "regular": 1.357,
+      "midgrade": 1.53,
+      "premium": 1.622,
+      "diesel": 1.903
      }
     },
     {
@@ -269,12 +269,12 @@
      "region": "ON",
      "lat": 43.5448,
      "lon": -80.2482,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.453,
-      "midgrade": 1.671,
-      "premium": 1.756,
-      "diesel": 2.134
+      "regular": 1.476,
+      "midgrade": 1.693,
+      "premium": 1.778,
+      "diesel": 2.102
      }
     },
     {
@@ -282,11 +282,11 @@
      "region": "NS",
      "lat": 44.6488,
      "lon": -63.5752,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.56,
       "midgrade": 1.663,
-      "premium": 1.737,
+      "premium": 1.738,
       "diesel": 2.285
      }
     },
@@ -295,12 +295,12 @@
      "region": "ON",
      "lat": 43.2557,
      "lon": -79.8711,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.452,
-      "midgrade": 1.657,
-      "premium": 1.751,
-      "diesel": 2.198
+      "regular": 1.472,
+      "midgrade": 1.677,
+      "premium": 1.771,
+      "diesel": 2.188
      }
     },
     {
@@ -308,12 +308,12 @@
      "region": "BC",
      "lat": 50.6745,
      "lon": -120.3273,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.529,
       "midgrade": 1.699,
       "premium": 1.792,
-      "diesel": 2.346
+      "diesel": 2.326
      }
     },
     {
@@ -321,12 +321,12 @@
      "region": "BC",
      "lat": 49.888,
      "lon": -119.496,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.578,
-      "midgrade": 1.745,
-      "premium": 1.835,
-      "diesel": 2.358
+      "regular": 1.569,
+      "midgrade": 1.713,
+      "premium": 1.826,
+      "diesel": 2.338
      }
     },
     {
@@ -334,11 +334,11 @@
      "region": "NS",
      "lat": 45.0771,
      "lon": -64.4958,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.573,
+      "regular": 1.566,
       "midgrade": 1.679,
-      "premium": 1.759,
+      "premium": 1.752,
       "diesel": 2.287
      }
     },
@@ -347,12 +347,12 @@
      "region": "ON",
      "lat": 44.2312,
      "lon": -76.486,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.484,
-      "midgrade": 1.694,
-      "premium": 1.791,
-      "diesel": 2.144
+      "regular": 1.413,
+      "midgrade": 1.626,
+      "premium": 1.723,
+      "diesel": 2.134
      }
     },
     {
@@ -360,12 +360,12 @@
      "region": "ON",
      "lat": 43.4516,
      "lon": -80.4925,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.458,
-      "midgrade": 1.662,
-      "premium": 1.761,
-      "diesel": 2.102
+      "regular": 1.47,
+      "midgrade": 1.672,
+      "premium": 1.773,
+      "diesel": 2.089
      }
     },
     {
@@ -373,12 +373,12 @@
      "region": "NL",
      "lat": 52.9463,
      "lon": -66.9114,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.715,
-      "midgrade": 1.745,
-      "premium": 1.775,
-      "diesel": 2.376
+      "regular": 1.734,
+      "midgrade": 1.764,
+      "premium": 1.794,
+      "diesel": 2.37
      }
     },
     {
@@ -386,7 +386,7 @@
      "region": "AB",
      "lat": 49.6956,
      "lon": -112.8451,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.185,
       "midgrade": 1.337,
@@ -399,12 +399,12 @@
      "region": "AB",
      "lat": 53.2783,
      "lon": -110.0053,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.196,
-      "midgrade": 1.384,
-      "premium": 1.472,
-      "diesel": 2.091
+      "regular": 1.189,
+      "midgrade": 1.374,
+      "premium": 1.466,
+      "diesel": 2.087
      }
     },
     {
@@ -412,12 +412,12 @@
      "region": "ON",
      "lat": 42.9849,
      "lon": -81.2453,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.457,
-      "midgrade": 1.668,
-      "premium": 1.769,
-      "diesel": 2.117
+      "regular": 1.475,
+      "midgrade": 1.685,
+      "premium": 1.787,
+      "diesel": 2.105
      }
     },
     {
@@ -425,12 +425,12 @@
      "region": "NB",
      "lat": 47.0296,
      "lon": -65.5019,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.588,
       "midgrade": 1.748,
       "premium": 1.912,
-      "diesel": 2.305
+      "diesel": 2.303
      }
     },
     {
@@ -438,12 +438,12 @@
      "region": "NB",
      "lat": 46.0878,
      "lon": -64.7782,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.575,
-      "midgrade": 1.73,
-      "premium": 1.888,
-      "diesel": 2.278
+      "regular": 1.573,
+      "midgrade": 1.728,
+      "premium": 1.886,
+      "diesel": 2.281
      }
     },
     {
@@ -451,12 +451,12 @@
      "region": "QC",
      "lat": 45.5019,
      "lon": -73.5674,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.602,
-      "midgrade": 1.821,
-      "premium": 1.871,
-      "diesel": 2.519
+      "regular": 1.581,
+      "midgrade": 1.8,
+      "premium": 1.85,
+      "diesel": 2.499
      }
     },
     {
@@ -464,12 +464,12 @@
      "region": "SK",
      "lat": 50.3934,
      "lon": -105.5519,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.399,
       "midgrade": 1.564,
       "premium": 1.667,
-      "diesel": 2.259
+      "diesel": 2.242
      }
     },
     {
@@ -477,7 +477,7 @@
      "region": "NS",
      "lat": 45.5869,
      "lon": -62.6453,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.571,
       "midgrade": 1.678,
@@ -490,12 +490,12 @@
      "region": "ON",
      "lat": 46.3091,
      "lon": -79.4608,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.457,
-      "midgrade": 1.676,
-      "premium": 1.77,
-      "diesel": 2.23
+      "regular": 1.42,
+      "midgrade": 1.644,
+      "premium": 1.733,
+      "diesel": 2.223
      }
     },
     {
@@ -503,12 +503,12 @@
      "region": "ON",
      "lat": 43.8971,
      "lon": -78.8658,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.452,
-      "midgrade": 1.659,
-      "premium": 1.759,
-      "diesel": 2.128
+      "regular": 1.469,
+      "midgrade": 1.675,
+      "premium": 1.776,
+      "diesel": 2.112
      }
     },
     {
@@ -516,12 +516,12 @@
      "region": "ON",
      "lat": 45.4215,
      "lon": -75.6972,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.397,
-      "midgrade": 1.601,
-      "premium": 1.701,
-      "diesel": 2.216
+      "regular": 1.406,
+      "midgrade": 1.61,
+      "premium": 1.71,
+      "diesel": 2.195
      }
     },
     {
@@ -529,12 +529,12 @@
      "region": "ON",
      "lat": 44.3091,
      "lon": -78.3197,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.463,
-      "midgrade": 1.667,
-      "premium": 1.756,
-      "diesel": 2.278
+      "regular": 1.389,
+      "midgrade": 1.592,
+      "premium": 1.682,
+      "diesel": 2.271
      }
     },
     {
@@ -542,7 +542,7 @@
      "region": "SK",
      "lat": 53.2033,
      "lon": -105.7531,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.247,
       "midgrade": 1.302,
@@ -555,12 +555,12 @@
      "region": "BC",
      "lat": 53.9171,
      "lon": -122.7497,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.455,
-      "midgrade": 1.569,
-      "premium": 1.727,
-      "diesel": 2.347
+      "regular": 1.457,
+      "midgrade": 1.579,
+      "premium": 1.729,
+      "diesel": 2.335
      }
     },
     {
@@ -568,12 +568,12 @@
      "region": "QC",
      "lat": 46.8139,
      "lon": -71.208,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.583,
-      "midgrade": 1.804,
-      "premium": 1.853,
-      "diesel": 2.603
+      "regular": 1.564,
+      "midgrade": 1.785,
+      "premium": 1.834,
+      "diesel": 2.593
      }
     },
     {
@@ -581,12 +581,12 @@
      "region": "AB",
      "lat": 52.2681,
      "lon": -113.8112,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.212,
-      "midgrade": 1.357,
-      "premium": 1.479,
-      "diesel": 2.07
+      "regular": 1.207,
+      "midgrade": 1.354,
+      "premium": 1.476,
+      "diesel": 2.058
      }
     },
     {
@@ -594,12 +594,12 @@
      "region": "SK",
      "lat": 50.4452,
      "lon": -104.6189,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.354,
       "midgrade": 1.543,
       "premium": 1.613,
-      "diesel": 2.131
+      "diesel": 2.129
      }
     },
     {
@@ -607,12 +607,12 @@
      "region": "QC",
      "lat": 48.449,
      "lon": -68.523,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.634,
       "midgrade": 1.858,
       "premium": 1.906,
-      "diesel": 2.605
+      "diesel": 2.583
      }
     },
     {
@@ -620,12 +620,12 @@
      "region": "NB",
      "lat": 45.2733,
      "lon": -66.0633,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.565,
       "midgrade": 1.718,
       "premium": 1.887,
-      "diesel": 2.283
+      "diesel": 2.282
      }
     },
     {
@@ -633,7 +633,7 @@
      "region": "ON",
      "lat": 42.9745,
      "lon": -82.4066,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.498,
       "midgrade": 1.711,
@@ -646,12 +646,12 @@
      "region": "SK",
      "lat": 52.1332,
      "lon": -106.67,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.345,
-      "midgrade": 1.508,
-      "premium": 1.609,
-      "diesel": 2.237
+      "regular": 1.337,
+      "midgrade": 1.502,
+      "premium": 1.602,
+      "diesel": 2.199
      }
     },
     {
@@ -659,12 +659,12 @@
      "region": "ON",
      "lat": 46.5219,
      "lon": -84.3461,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.531,
-      "midgrade": 1.731,
-      "premium": 1.839,
-      "diesel": 2.463
+      "regular": 1.517,
+      "midgrade": 1.715,
+      "premium": 1.826,
+      "diesel": 2.415
      }
     },
     {
@@ -672,12 +672,12 @@
      "region": "QC",
      "lat": 45.4042,
      "lon": -71.8929,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.601,
-      "midgrade": 1.814,
-      "premium": 1.867,
-      "diesel": 2.582
+      "regular": 1.584,
+      "midgrade": 1.797,
+      "premium": 1.849,
+      "diesel": 2.564
      }
     },
     {
@@ -685,12 +685,12 @@
      "region": "ON",
      "lat": 43.1594,
      "lon": -79.2469,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.418,
-      "midgrade": 1.623,
-      "premium": 1.716,
-      "diesel": 2.212
+      "regular": 1.43,
+      "midgrade": 1.635,
+      "premium": 1.729,
+      "diesel": 2.169
      }
     },
     {
@@ -698,12 +698,12 @@
      "region": "NL",
      "lat": 47.5615,
      "lon": -52.7126,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.644,
-      "midgrade": 1.674,
-      "premium": 1.704,
-      "diesel": 2.286
+      "regular": 1.656,
+      "midgrade": 1.686,
+      "premium": 1.716,
+      "diesel": 2.282
      }
     },
     {
@@ -711,12 +711,12 @@
      "region": "ON",
      "lat": 46.4917,
      "lon": -80.993,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.272,
-      "midgrade": 1.48,
-      "premium": 1.581,
-      "diesel": 2.348
+      "regular": 1.263,
+      "midgrade": 1.475,
+      "premium": 1.572,
+      "diesel": 2.345
      }
     },
     {
@@ -724,12 +724,12 @@
      "region": "NB",
      "lat": 45.7226,
      "lon": -65.5105,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.567,
       "midgrade": 1.734,
       "premium": 1.897,
-      "diesel": 2.28
+      "diesel": 2.279
      }
     },
     {
@@ -737,12 +737,12 @@
      "region": "NS",
      "lat": 46.1368,
      "lon": -60.1942,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.579,
       "midgrade": 1.676,
-      "premium": 1.746,
-      "diesel": 2.308
+      "premium": 1.747,
+      "diesel": 2.305
      }
     },
     {
@@ -750,12 +750,12 @@
      "region": "ON",
      "lat": 48.3809,
      "lon": -89.2477,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.456,
-      "midgrade": 1.668,
-      "premium": 1.762,
-      "diesel": 2.166
+      "regular": 1.444,
+      "midgrade": 1.659,
+      "premium": 1.751,
+      "diesel": 2.162
      }
     },
     {
@@ -763,12 +763,12 @@
      "region": "ON",
      "lat": 48.4758,
      "lon": -81.3305,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.619,
-      "midgrade": 1.814,
-      "premium": 1.902,
-      "diesel": 2.449
+      "regular": 1.609,
+      "midgrade": 1.804,
+      "premium": 1.892,
+      "diesel": 2.441
      }
     },
     {
@@ -776,12 +776,12 @@
      "region": "ON",
      "lat": 43.6532,
      "lon": -79.3832,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.455,
-      "midgrade": 1.663,
-      "premium": 1.769,
-      "diesel": 2.14
+      "regular": 1.475,
+      "midgrade": 1.683,
+      "premium": 1.789,
+      "diesel": 2.123
      }
     },
     {
@@ -789,12 +789,12 @@
      "region": "QC",
      "lat": 46.3432,
      "lon": -72.5421,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.566,
       "midgrade": 1.786,
-      "premium": 1.835,
-      "diesel": 2.655
+      "premium": 1.834,
+      "diesel": 2.615
      }
     },
     {
@@ -802,11 +802,11 @@
      "region": "NS",
      "lat": 45.365,
      "lon": -63.2861,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.571,
-      "midgrade": 1.669,
-      "premium": 1.739,
+      "midgrade": 1.67,
+      "premium": 1.74,
       "diesel": 2.291
      }
     },
@@ -815,12 +815,12 @@
      "region": "QC",
      "lat": 48.0975,
      "lon": -77.7828,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.625,
+      "regular": 1.624,
       "midgrade": 1.838,
       "premium": 1.88,
-      "diesel": 2.637
+      "diesel": 2.624
      }
     },
     {
@@ -828,12 +828,12 @@
      "region": "BC",
      "lat": 49.2827,
      "lon": -123.1207,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.737,
-      "midgrade": 1.921,
-      "premium": 2.0,
-      "diesel": 2.451
+      "regular": 1.746,
+      "midgrade": 1.931,
+      "premium": 2.009,
+      "diesel": 2.427
      }
     },
     {
@@ -841,12 +841,12 @@
      "region": "BC",
      "lat": 48.4284,
      "lon": -123.3656,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.778,
+      "regular": 1.77,
       "midgrade": 1.961,
-      "premium": 2.046,
-      "diesel": 2.421
+      "premium": 2.039,
+      "diesel": 2.397
      }
     },
     {
@@ -854,7 +854,7 @@
      "region": "YT",
      "lat": 60.7212,
      "lon": -135.0568,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.749,
       "midgrade": 1.814,
@@ -867,12 +867,12 @@
      "region": "ON",
      "lat": 42.3149,
      "lon": -83.0364,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.45,
-      "midgrade": 1.653,
-      "premium": 1.755,
-      "diesel": 2.093
+      "regular": 1.452,
+      "midgrade": 1.652,
+      "premium": 1.758,
+      "diesel": 2.073
      }
     },
     {
@@ -880,12 +880,12 @@
      "region": "MB",
      "lat": 49.8951,
      "lon": -97.1384,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.331,
-      "midgrade": 1.461,
-      "premium": 1.597,
-      "diesel": 2.243
+      "regular": 1.357,
+      "midgrade": 1.499,
+      "premium": 1.625,
+      "diesel": 2.226
      }
     },
     {
@@ -893,7 +893,7 @@
      "region": "NS",
      "lat": 43.8375,
      "lon": -66.1174,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
       "regular": 1.57,
       "midgrade": 1.683,
@@ -906,11 +906,11 @@
      "region": "NT",
      "lat": 62.454,
      "lon": -114.3718,
-     "date": "2026-11-25",
+     "date": "2026-11-26",
      "prices": {
-      "regular": 1.674,
+      "regular": 1.649,
       "midgrade": 1.779,
-      "premium": 1.924,
+      "premium": 1.899,
       "diesel": 2.299
      }
     }
